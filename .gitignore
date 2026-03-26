@@ -1,0 +1,44 @@
+# =============================================================================
+# .gitignore — Conditional CycleGAN project
+# =============================================================================
+
+# ── Training outputs (large / generated files) ───────────────────────────────
+checkpoints/
+checkpoints_vanilla/
+samples/
+samples_vanilla/
+logs/
+logs_vanilla/
+results/
+
+# ── Dataset images (not committed — share separately) ────────────────────────
+trainA/
+trainB/
+trainC/
+trainD/
+test_samples/
+
+# ── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# ── Jupyter ───────────────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+
+# ── Environment ──────────────────────────────────────────────────────────────
+.env
+.venv/
+venv/
+env/
+
+# ── OS ───────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini

@@ -1,0 +1,21 @@
+{
+    "num_teams":         4,
+    "epochs":            200,
+    "batch_size":        4,
+    "lr":                0.0002,
+    "lambda_cycle":      10.0,
+    "lambda_identity":   5.0,
+    "lambda_cls":        2.0,
+    "lambda_perceptual": 1.0,
+    "embed_dim":         512,
+    "num_res_blocks":    12,
+    "num_scales":        2,
+    "checkpoint_dir":    "checkpoints",
+    "sample_dir":        "samples",
+    "log_dir":           "logs",
+    "data_root":         ".",
+    "num_workers":       4,
+    "buffer_size":       50,
+    "warmup_epochs":     5,
+    "pretrained_enc":    true
+}
