@@ -1,0 +1,96 @@
+{
+  "total": 12,
+  "processed": 12,
+  "saved": 8,
+  "skipped": 4,
+  "errors": 0,
+  "skip_reasons": {
+    "no_person": 4
+  },
+  "records": [
+    {
+      "path": "dataset\\000_1MC0F7_jpg.rf.0745515f94ca02ef74c4168040563488.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8302907943725586
+    },
+    {
+      "path": "dataset\\000_97699U_jpg.rf.d8c1f8a23d9789b7431cf519e2a536e3.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8850550055503845
+    },
+    {
+      "path": "dataset\\000_9RJ8CT_jpg.rf.5f3b7b17c5aa26b6813b2d5ca3167106.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.860454261302948
+    },
+    {
+      "path": "dataset\\000_GZ802_jpg.rf.042e604bbe7d8176c7d875e87d9a4d05.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8135344386100769
+    },
+    {
+      "path": "dataset\\010_jpg.rf.01887c6ff5a35bd6451fd3441dc0714a.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_person",
+      "person_conf": 0.0
+    },
+    {
+      "path": "dataset\\010_jpg.rf.031fa741f67f813cb881332673790e53.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_person",
+      "person_conf": 0.0
+    },
+    {
+      "path": "dataset\\010_jpg.rf.058aa2d524cd7f1176dd44072162b71a.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.7222415208816528
+    },
+    {
+      "path": "dataset\\010_jpg.rf.06ba0c4287339c74c7c3a9ef3c662e90.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8033716678619385
+    },
+    {
+      "path": "dataset\\010_jpg.rf.06c49698f0de40aa32a4ba63522d95bd.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_person",
+      "person_conf": 0.0
+    },
+    {
+      "path": "dataset\\010_jpg.rf.084bbfb2fcc61f28b86f04ce04cbce60.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8258972764015198
+    },
+    {
+      "path": "dataset\\010_jpg.rf.0e1685ff2f60c0ff9f50367ee4d0a2c5.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.39912980794906616
+    },
+    {
+      "path": "dataset\\010_jpg.rf.0ee71cff5b554d842eb5c4c5ffd784b6.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_person",
+      "person_conf": 0.0
+    }
+  ]
+}
