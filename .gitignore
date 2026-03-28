@@ -10,6 +10,12 @@ samples_vanilla/
 logs/
 logs_vanilla/
 results/
+outputs/
+outputs_tuned/
+outputs_tuned_v2/
+outputs_faces/
+outputs_faces_strict/
+outputs_faces_strict_all/
 
 # ── Dataset images (not committed — share separately) ────────────────────────
 trainA/
