@@ -1,43 +1,20 @@
-# =============================================================================
-# requirements.txt — Conditional CycleGAN Jersey Translation
-# =============================================================================
+# Conditional CycleGAN — Python dependencies
+# Install with:  pip install -r requirements.txt
 #
-# ── IMPORTANT: PyTorch installation ─────────────────────────────────────────
-#
-# PyTorch must be installed with the correct CUDA version for your GPU.
-# Do NOT use the plain `pip install torch` here — it installs the CPU-only build.
-#
-# For CUDA 12.1 (most RTX 30xx / 40xx cards):
-#   python -m pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
-#
-# For CUDA 11.8:
-#   python -m pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
-#
-# If you are using the ComfyUI embedded Python environment, PyTorch and
-# torchvision are already installed — skip the line above and run:
-#   python -m pip install -r requirements.txt
-#
-# Check your installed version first:
-#   python -c "import torch; print(torch.__version__, torch.cuda.is_available())"
-#
-# =============================================================================
+# Tested with Python 3.10+
+# CUDA 11.8+ recommended for GPU training (install matching torch from pytorch.org)
 
-# ── Core deep learning ───────────────────────────────────────────────────────
-# torch and torchvision are listed here so a fresh-env install works.
-# The ComfyUI embedded env already provides these — pip will skip them
-# if the correct versions are already present.
-torch>=2.0.0
-torchvision>=0.15.0
+# ── Core deep learning ────────────────────────────────────────────────────────
+torch>=2.1.0
+torchvision>=0.16.0
 
-# ── Image I/O ────────────────────────────────────────────────────────────────
-Pillow>=9.0.0                  # PIL — image loading in JerseyDataset and infer.py
+# ── ArcFace identity extractor (InceptionResnetV1, VGGFace2 pretrained) ───────
+facenet-pytorch>=2.5.3
 
-# ── Scientific / numerical ───────────────────────────────────────────────────
-numpy>=1.23.0                  # array ops (pulled in by torch, pinned for safety)
+# ── Image I/O ─────────────────────────────────────────────────────────────────
+Pillow>=9.5.0
+opencv-python>=4.8.0   # used by facenet-pytorch internals
 
-# ── Results notebook ─────────────────────────────────────────────────────────
-pandas>=1.5.0                  # CSV loss log loading in results.ipynb
-matplotlib>=3.6.0              # loss curve + sample grid plots
-ipython>=8.0.0                 # IPython.display.Image used in results.ipynb
-jupyter>=1.0.0                 # Jupyter notebook server
-ipykernel>=6.0.0               # Jupyter kernel for .ipynb
+# ── Utilities ─────────────────────────────────────────────────────────────────
+numpy>=1.24.0
+tqdm>=4.66.0

@@ -1,424 +1,396 @@
-# =============================================================================
-# train.py — Conditional CycleGAN Training Loop (upgraded architecture)
-#
-# Supports:
-#   --config  <json>   load hyperparameters from a JSON file
-#   --resume  <ckpt>   resume training from a saved checkpoint
-#   --log_file <path>  redirect stdout/stderr to a log file
-#
-# Usage:
-#   python train.py --config configs/adain_4team.json
-#   python train.py --config configs/adain_4team.json --resume checkpoints/epoch_090.pt
-# =============================================================================
+"""
+train.py — Conditional CycleGAN training loop
 
-import os
-import sys
-import json
-import random
+Usage:
+    python train.py --train_a faces --train_b bradpitt_circle_256
+
+Key schedule:
+    Epochs 1-5    : linear LR warmup (epoch/5 × base_lr)
+    Epochs 6-100  : constant LR = 2e-4
+    Epochs 101-200: linear decay to 0
+
+Checkpoints saved every 10 epochs to:  checkpoints/epoch_NNN.pt
+Sample grids saved every 10 epochs to: samples/epoch_NNN.png
+Loss log written every iteration to:   logs/loss_log.csv
+"""
+
 import argparse
-from typing import Any, Dict
-
-# Ensure project directory is first on sys.path so local modules take
-# priority over any same-named packages in the Python environment.
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import csv
+import os
+from pathlib import Path
 
 import torch
-import torch.nn as nn
-from torch.optim import Adam
-from torch.optim.lr_scheduler import LambdaLR
+from torch.cuda.amp import GradScaler
+from tqdm import tqdm
 
-from models  import Generator, MultiScaleDiscriminator, Classifier
-from dataset import JerseyDataset, ImageBuffer, make_paired_dataloaders
-from losses  import (
-    LSGanLoss, CycleLoss, IdentityLoss,
-    ClassificationLoss, PerceptualLoss,
-)
-from utils   import (
-    verify_param_count, save_sample_grid,
-    save_checkpoint, load_checkpoint, LossLogger,
-)
+from models import Generator, Discriminator, IdentityExtractor, ParsingNet
+from dataset import make_dataloader, ImageBuffer
+from losses import LSGanLoss, CycleLoss, IdentityLoss, IdRetentionLoss
+from utils import count_params, save_sample_grid, load_checkpoint, download_bisenet_weights
 
 
-# =============================================================================
-# Section 1: Default Configuration
-# =============================================================================
+# ─────────────────────────────────────────────────────────────────────────────
+# LR Schedule
+# ─────────────────────────────────────────────────────────────────────────────
 
-DEFAULT_CONFIG: Dict[str, Any] = {
-    "num_teams":         4,
-    "epochs":            200,
-    "batch_size":        4,
-    "lr":                2e-4,
-    "lambda_cycle":      10.0,
-    "lambda_identity":   5.0,
-    "lambda_cls":        2.0,
-    "lambda_perceptual": 1.0,
-    "embed_dim":         512,
-    "num_res_blocks":    12,
-    "num_scales":        2,
-    "checkpoint_dir":    "checkpoints",
-    "sample_dir":        "samples",
-    "log_dir":           "logs",
-    "data_root":         ".",
-    "num_workers":       4,
-    "buffer_size":       50,
-    "warmup_epochs":     5,
-    "pretrained_enc":    True,
-}
-
-
-def load_config(config_path: str) -> Dict[str, Any]:
+def make_lr_lambda(
+    total_epochs:  int = 200,
+    warmup_epochs: int = 5,
+    decay_start:   int = 100,
+):
     """
-    Load a JSON config file and merge with defaults.
+    Build the lambda function used with torch.optim.lr_scheduler.LambdaLR.
+
+    Schedule (1-indexed epochs):
+        1 … warmup_epochs  : linear warmup, lr × epoch/warmup_epochs
+        warmup+1 … 100     : constant lr × 1.0
+        101 … total_epochs : linear decay, lr × (1 - progress)
 
     Args:
-        config_path : path to a JSON configuration file
+        total_epochs  : total number of training epochs
+        warmup_epochs : number of warmup epochs at the start
+        decay_start   : epoch (1-indexed) at which linear decay begins
     Returns:
-        config      : merged configuration dict
+        fn : callable(epoch_0indexed) → float multiplier
     """
-    cfg = DEFAULT_CONFIG.copy()
-    with open(config_path, 'r') as f:
-        cfg.update(json.load(f))
-    return cfg
-
-
-# =============================================================================
-# Section 2: Learning Rate Schedule
-# =============================================================================
-
-def make_lr_lambda(warmup_epochs: int, total_epochs: int, decay_start: int):
-    """
-    Build a LambdaLR schedule function:
-        Epochs 1 … warmup_epochs   : linear ramp up
-        Epochs warmup_epochs+1 … decay_start : constant = 1.0
-        Epochs decay_start+1 … total_epochs  : linear decay to 0
-
-    Args:
-        warmup_epochs : warm-up length in epochs
-        total_epochs  : total training epochs
-        decay_start   : epoch at which linear decay begins
-    Returns:
-        lr_lambda : callable for LambdaLR
-    """
-    def lr_lambda(epoch: int) -> float:
-        e = epoch + 1  # convert 0-based LambdaLR index to 1-based epoch
+    def fn(epoch_0idx: int) -> float:
+        e = epoch_0idx + 1                             # convert to 1-indexed
         if e <= warmup_epochs:
-            return max(1e-6, e / warmup_epochs)
+            return e / warmup_epochs
         elif e <= decay_start:
             return 1.0
         else:
-            remaining = total_epochs - decay_start
-            elapsed   = e - decay_start
-            return max(0.0, 1.0 - elapsed / remaining)
-
-    return lr_lambda
+            progress = (e - decay_start) / max(1, total_epochs - decay_start)
+            return max(0.0, 1.0 - progress)
+    return fn
 
 
-# =============================================================================
-# Section 3: Main Training Loop
-# =============================================================================
+# ─────────────────────────────────────────────────────────────────────────────
+# CSV Loss Logger
+# ─────────────────────────────────────────────────────────────────────────────
 
-def train(config: Dict[str, Any], resume_path: str = None) -> None:
+class CSVLogger:
     """
-    Full training loop for the conditional CycleGAN.
-
-    Each iteration:
-        1. Sample source batch (real_img, src_label) from the loader.
-        2. Choose one target domain c_tgt; sample real_tgt for D_B.
-        3. Update Generator G (adversarial + cycle + identity + cls + perceptual).
-        4. Update Classifier C on real images.
-        5. Update Discriminator D_A on (real_img, rec_A) pairs.
-        6. Update Discriminator D_B on (real_tgt, fake_B) pairs.
+    Appends one row of scalar loss values to a CSV file each iteration.
 
     Args:
-        config      : training configuration dict
-        resume_path : optional checkpoint path to resume from
+        path : destination CSV file path (created with header if absent)
     """
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    print(f"[train] Device: {device}")
 
-    # ── Domain folders ──
-    data_root      = config['data_root']
-    num_teams      = config['num_teams']
-    domain_folders = [
-        os.path.join(data_root, f'train{chr(65 + i)}')
-        for i in range(num_teams)
+    _FIELDS = [
+        'epoch', 'iteration',
+        'loss_G', 'loss_D_A', 'loss_D_B',
+        'loss_cycle', 'loss_identity', 'loss_id',
     ]
-    print(f"[train] Domains: {domain_folders}")
 
-    for d in [config['checkpoint_dir'], config['sample_dir'], config['log_dir']]:
-        os.makedirs(d, exist_ok=True)
+    def __init__(self, path: str):
+        self.path = path
+        Path(path).parent.mkdir(parents=True, exist_ok=True)
+        if not Path(path).exists():
+            with open(path, 'w', newline='') as fh:
+                csv.DictWriter(fh, fieldnames=self._FIELDS).writeheader()
 
-    # ── Data ──
-    loader, dataset = make_paired_dataloaders(
-        domain_folders,
-        batch_size=config['batch_size'],
-        num_workers=config['num_workers'],
-        augment=True,
+    def log(self, **kwargs) -> None:
+        """
+        Write one row.  Keyword argument names must match _FIELDS.
+
+        Args:
+            epoch     : int
+            iteration : int
+            loss_G, loss_D_A, loss_D_B, loss_cycle, loss_identity, loss_id : float
+        """
+        row = {
+            k: (f'{v:.6f}' if isinstance(v, float) else str(v))
+            for k, v in kwargs.items()
+        }
+        with open(self.path, 'a', newline='') as fh:
+            csv.DictWriter(fh, fieldnames=self._FIELDS).writerow(row)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Training
+# ─────────────────────────────────────────────────────────────────────────────
+
+def train(args: argparse.Namespace) -> None:
+    """
+    Main training entry point.
+
+    Args:
+        args : parsed CLI arguments (see parse_args())
+    """
+    # ── Device ──────────────────────────────────────────────────────────────
+    device      = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    use_amp     = device.type == 'cuda'
+    amp_dtype   = torch.float16 if use_amp else torch.float32
+    print(f"[train] Device: {device}  |  AMP: {use_amp}")
+
+    # ── Output directories ───────────────────────────────────────────────────
+    for d in ('checkpoints', 'samples', 'logs', 'pretrained'):
+        Path(d).mkdir(exist_ok=True)
+
+    # ── BiSeNet weights ──────────────────────────────────────────────────────
+    bisenet_weights = args.bisenet_weights
+    if not bisenet_weights or not Path(bisenet_weights).exists():
+        bisenet_weights = download_bisenet_weights()
+
+    # ── Pretrained auxiliary models (frozen) ─────────────────────────────────
+    id_extractor = IdentityExtractor(device)
+    parsing_net  = ParsingNet(bisenet_weights, device)
+    print("[train] Loaded IdentityExtractor and ParsingNet.")
+
+    # ── Trainable models ─────────────────────────────────────────────────────
+    G_AB = Generator(args.base_channels, args.n_res_blocks).to(device)
+    G_BA = Generator(args.base_channels, args.n_res_blocks).to(device)
+    D_A  = Discriminator().to(device)
+    D_B  = Discriminator().to(device)
+    print(
+        f"[train] G_AB params: {count_params(G_AB):,}  "
+        f"D_A params: {count_params(D_A):,}"
     )
 
-    # ── Models ──
-    G   = Generator(
-            num_teams,
-            embed_dim=config['embed_dim'],
-            num_blocks=config['num_res_blocks'],
-            pretrained=config.get('pretrained_enc', True),
-          ).to(device)
-    D_A = MultiScaleDiscriminator(
-            num_teams, img_size=256, num_scales=config['num_scales']
-          ).to(device)
-    D_B = MultiScaleDiscriminator(
-            num_teams, img_size=256, num_scales=config['num_scales']
-          ).to(device)
-    C   = Classifier(num_teams).to(device)
+    # ── Optimisers ───────────────────────────────────────────────────────────
+    opt_G  = torch.optim.Adam(
+        list(G_AB.parameters()) + list(G_BA.parameters()),
+        lr=args.lr, betas=(0.5, 0.999),
+    )
+    opt_DA = torch.optim.Adam(D_A.parameters(), lr=args.lr, betas=(0.5, 0.999))
+    opt_DB = torch.optim.Adam(D_B.parameters(), lr=args.lr, betas=(0.5, 0.999))
 
-    verify_param_count(G, D_A, D_B, C)
+    # ── LR Schedulers ────────────────────────────────────────────────────────
+    lr_fn    = make_lr_lambda(args.epochs, warmup_epochs=5, decay_start=100)
+    sched_G  = torch.optim.lr_scheduler.LambdaLR(opt_G,  lr_lambda=lr_fn)
+    sched_DA = torch.optim.lr_scheduler.LambdaLR(opt_DA, lr_lambda=lr_fn)
+    sched_DB = torch.optim.lr_scheduler.LambdaLR(opt_DB, lr_lambda=lr_fn)
 
-    # ── Loss functions ──
-    gan_loss  = LSGanLoss()
-    cyc_loss  = CycleLoss(lambda_cycle=config['lambda_cycle'])
-    idt_loss  = IdentityLoss(lambda_identity=config['lambda_identity'])
-    cls_loss  = ClassificationLoss(lambda_cls=config['lambda_cls'])
-    perc_loss = PerceptualLoss(
-                    lambda_perceptual=config['lambda_perceptual']
-                ).to(device)
-    ce_loss   = nn.CrossEntropyLoss()
+    # ── Mixed-precision scaler ───────────────────────────────────────────────
+    scaler = GradScaler(enabled=use_amp)
 
-    # ── Optimisers ──
-    # Generator: two parameter groups — encoder at lower lr, rest at full lr
-    lr = config['lr']
-    g_param_groups = [
-        {'params': G.encoder.parameters(),         'lr': lr * 0.1},
-        {'params': G.proj.parameters(),            'lr': lr},
-        {'params': G.label_embedding.parameters(), 'lr': lr},
-        {'params': G.res_blocks.parameters(),      'lr': lr},
-        {'params': G.up1.parameters(),             'lr': lr},
-        {'params': G.up2.parameters(),             'lr': lr},
-        {'params': G.up3.parameters(),             'lr': lr},
-    ]
-    opt_G   = Adam(g_param_groups,       betas=(0.5, 0.999))
-    opt_D_A = Adam(D_A.parameters(), lr=lr, betas=(0.5, 0.999))
-    opt_D_B = Adam(D_B.parameters(), lr=lr, betas=(0.5, 0.999))
-    opt_C   = Adam(C.parameters(),   lr=lr, betas=(0.5, 0.999))
-
-    # ── Mixed-precision GradScalers ──
-    scaler_G = torch.amp.GradScaler('cuda')
-    scaler_D = torch.amp.GradScaler('cuda')
-    scaler_C = torch.amp.GradScaler('cuda')
-
-    # ── LR Schedulers ──
-    total_epochs  = config['epochs']
-    warmup_epochs = config['warmup_epochs']
-    decay_start   = total_epochs // 2
-
-    lr_fn     = make_lr_lambda(warmup_epochs, total_epochs, decay_start)
-    sched_G   = LambdaLR(opt_G,   lr_lambda=lr_fn)
-    sched_D_A = LambdaLR(opt_D_A, lr_lambda=lr_fn)
-    sched_D_B = LambdaLR(opt_D_B, lr_lambda=lr_fn)
-    sched_C   = LambdaLR(opt_C,   lr_lambda=lr_fn)
-
-    # ── Image buffers ──
-    buf_A = ImageBuffer(max_size=config['buffer_size'])
-    buf_B = ImageBuffer(max_size=config['buffer_size'])
-
-    # ── Logger ──
-    log_path = os.path.join(config['log_dir'], 'loss_log.csv')
-    logger   = LossLogger(log_path)
-
-    # ── Optionally resume ──
+    # ── Resume from checkpoint ───────────────────────────────────────────────
     start_epoch = 1
-    if resume_path:
+    if args.resume and Path(args.resume).exists():
         start_epoch = load_checkpoint(
-            resume_path,
-            G, D_A, D_B, C,
-            opt_G, opt_D_A, opt_D_B, opt_C,
-            scaler_G, scaler_D, scaler_C,
+            args.resume,
+            G_AB, G_BA, D_A, D_B,
+            opt_G, opt_DA, opt_DB,
             device,
-        )
+        ) + 1
+        # Step schedulers so they resume at the correct LR
         for _ in range(start_epoch - 1):
-            sched_G.step(); sched_D_A.step(); sched_D_B.step(); sched_C.step()
-        print(f"[train] Schedulers fast-forwarded to epoch {start_epoch}")
+            sched_G.step(); sched_DA.step(); sched_DB.step()
+        print(f"[train] Resumed from {args.resume}, starting at epoch {start_epoch}.")
 
-    print(f"[train] Starting from epoch {start_epoch}/{total_epochs}")
+    # ── Loss functions ───────────────────────────────────────────────────────
+    gan_loss = LSGanLoss()
+    cyc_loss = CycleLoss(lambda_cycle=args.lambda_cycle)
+    idt_loss = IdentityLoss(lambda_identity=args.lambda_cycle * 0.5)
+    id_ret   = IdRetentionLoss(lambda_id=args.lambda_id)
 
-    # ── Training loop ──
-    for epoch in range(start_epoch, total_epochs + 1):
-        G.train(); D_A.train(); D_B.train(); C.train()
+    # ── Data & buffers ───────────────────────────────────────────────────────
+    loader = make_dataloader(
+        args.train_a, args.train_b,
+        batch_size=args.batch_size,
+        num_workers=args.num_workers,
+    )
+    buf_A  = ImageBuffer(max_size=50)
+    buf_B  = ImageBuffer(max_size=50)
+    logger = CSVLogger('logs/loss_log.csv')
 
-        for iteration, (real_img, src_label) in enumerate(loader, start=1):
-            real_img  = real_img.to(device)
-            src_label = src_label.to(device)
-            B         = real_img.size(0)
+    # ── Training loop ────────────────────────────────────────────────────────
+    for epoch in range(start_epoch, args.epochs + 1):
+        G_AB.train(); G_BA.train(); D_A.train(); D_B.train()
 
-            # ── Choose target domain (scalar for whole batch) ──
-            src0    = int(src_label[0].item())
-            others  = [d for d in range(num_teams) if d != src0]
-            c_tgt   = random.choice(others)
-            tgt_label = torch.full((B,), c_tgt, dtype=torch.long, device=device)
+        pbar = tqdm(loader, desc=f'Epoch {epoch}/{args.epochs}', leave=False)
+        for it, batch in enumerate(pbar, start=1):
+            real_A = batch['real_A'].to(device)   # (B, 3, 256, 256)
+            real_B = batch['real_B'].to(device)   # (B, 3, 256, 256)
 
-            # ── Sample real target images for D_B ──
-            real_tgt, _ = dataset.sample_from_domain(c_tgt, B)
-            real_tgt    = real_tgt.to(device)
+            # ── Auxiliary features (no grad) ──────────────────────────────
+            with torch.no_grad():
+                mask_A = parsing_net(real_A)       # (B, 11, 256, 256)
+                mask_B = parsing_net(real_B)
+                id_A   = id_extractor(real_A)      # (B, 512)
+                id_B   = id_extractor(real_B)
 
-            # =================================================================
-            # Step 1 — Update Generator G
-            # =================================================================
+            # ══════════════════════════════════════════════════════════════
+            # Generator Update
+            # ══════════════════════════════════════════════════════════════
             opt_G.zero_grad(set_to_none=True)
 
-            # Freeze C so its weights aren't updated by the G cls loss path
-            for p in C.parameters():
-                p.requires_grad_(False)
+            # Step 1: Generate fake images
+            with torch.autocast(device_type=device.type, dtype=amp_dtype, enabled=use_amp):
+                fake_B = G_AB(real_A, mask_A, id_B)   # A → B
+                fake_A = G_BA(real_B, mask_B, id_A)   # B → A
 
-            with torch.autocast('cuda', dtype=torch.float16):
-                fake_B = G(real_img, tgt_label)    # source → target
-                rec_A  = G(fake_B,   src_label)    # target → source (cycle)
-                idt_A  = G(real_img, src_label)    # source → source (identity)
+            # Step 2: Extract masks for fake images (no grad, uses detached fakes)
+            with torch.no_grad():
+                mask_fB = parsing_net(fake_B.detach().float())   # (B, 11, 256, 256)
+                mask_fA = parsing_net(fake_A.detach().float())
 
-                # Adversarial: D_B judges fake_B, D_A judges rec_A
-                l_gan_B = gan_loss.generator_loss(D_B(fake_B, tgt_label))
-                l_gan_A = gan_loss.generator_loss(D_A(rec_A,  src_label))
-                l_gan   = l_gan_B + l_gan_A
+            # Step 3: Identity embeddings of fakes
+            #   Note: id_extractor has frozen weights but NO @no_grad decorator,
+            #   so gradients flow through it from fake_B/A back to G_AB/BA.
+            fake_B_emb = id_extractor(fake_B.float())   # (B, 512)
+            fake_A_emb = id_extractor(fake_A.float())
 
-                l_cyc = cyc_loss(rec_A, real_img)
-                l_idt = idt_loss(idt_A, real_img)
-                l_cls = cls_loss(C(fake_B), tgt_label)
+            # Step 4: Compute all generator losses inside autocast
+            with torch.autocast(device_type=device.type, dtype=amp_dtype, enabled=use_amp):
+                # Cycle reconstruction
+                rec_A = G_BA(fake_B, mask_fB, id_A)    # fake_B → rec_A
+                rec_B = G_AB(fake_A, mask_fA, id_B)    # fake_A → rec_B
 
-            # Perceptual loss runs in float32 for numerical stability
-            with torch.autocast('cuda', enabled=False):
-                l_perc = perc_loss(fake_B.float(), real_tgt.float())
+                # Identity mapping (G applied to own domain)
+                idt_A = G_BA(real_A, mask_A, id_A)
+                idt_B = G_AB(real_B, mask_B, id_B)
 
-            loss_G = l_gan + l_cyc + l_idt + l_cls + l_perc
+                # Adversarial losses (generator side)
+                l_gan_AB = gan_loss.generator_loss(D_B(fake_B, mask_fB, id_B))
+                l_gan_BA = gan_loss.generator_loss(D_A(fake_A, mask_fA, id_A))
+                l_gan    = l_gan_AB + l_gan_BA
 
-            scaler_G.scale(loss_G).backward()
-            scaler_G.step(opt_G)
-            scaler_G.update()
+                # Masked cycle-consistency losses
+                l_cyc = cyc_loss(rec_A, real_A) + cyc_loss(rec_B, real_B)
 
-            for p in C.parameters():
-                p.requires_grad_(True)
+                # Masked identity losses
+                l_idt = idt_loss(idt_A, real_A) + idt_loss(idt_B, real_B)
 
-            # =================================================================
-            # Step 2 — Update Classifier C on real images
-            # =================================================================
-            opt_C.zero_grad(set_to_none=True)
-            with torch.autocast('cuda', dtype=torch.float16):
-                loss_C = ce_loss(C(real_img), src_label)
-            scaler_C.scale(loss_C).backward()
-            scaler_C.step(opt_C)
-            scaler_C.update()
+            # Identity retention loss (float32 for numerical stability)
+            l_id = (
+                id_ret(fake_B_emb.float(), id_B.float())
+                + id_ret(fake_A_emb.float(), id_A.float())
+            )
 
-            # =================================================================
-            # Step 3 — Update Discriminator D_A (source domain)
-            # Real: (real_img, src_label)   Fake: (rec_A buffered, src_label)
-            # =================================================================
-            opt_D_A.zero_grad(set_to_none=True)
-            rec_A_buf = buf_A.push_and_pop(rec_A.detach())
-            with torch.autocast('cuda', dtype=torch.float16):
-                loss_D_A = gan_loss.discriminator_loss(
-                    D_A(real_img,  src_label),
-                    D_A(rec_A_buf, src_label),
+            loss_G = l_gan + l_cyc + l_idt + l_id
+            scaler.scale(loss_G).backward()
+            scaler.step(opt_G)
+
+            # ══════════════════════════════════════════════════════════════
+            # Discriminator D_B Update
+            # ══════════════════════════════════════════════════════════════
+            opt_DB.zero_grad(set_to_none=True)
+            fake_B_buf = buf_B.push_and_pop(fake_B.detach()).to(device)
+            with torch.autocast(device_type=device.type, dtype=amp_dtype, enabled=use_amp):
+                l_DB = gan_loss.discriminator_loss(
+                    D_B(real_B,       mask_B,  id_B),
+                    D_B(fake_B_buf,   mask_fB, id_B),
                 )
-            scaler_D.scale(loss_D_A).backward()
-            scaler_D.step(opt_D_A)
-            scaler_D.update()
+            scaler.scale(l_DB).backward()
+            scaler.step(opt_DB)
 
-            # =================================================================
-            # Step 4 — Update Discriminator D_B (target domain)
-            # Real: (real_tgt, tgt_label)   Fake: (fake_B buffered, tgt_label)
-            # =================================================================
-            opt_D_B.zero_grad(set_to_none=True)
-            fake_B_buf = buf_B.push_and_pop(fake_B.detach())
-            with torch.autocast('cuda', dtype=torch.float16):
-                loss_D_B = gan_loss.discriminator_loss(
-                    D_B(real_tgt,   tgt_label),
-                    D_B(fake_B_buf, tgt_label),
+            # ══════════════════════════════════════════════════════════════
+            # Discriminator D_A Update
+            # ══════════════════════════════════════════════════════════════
+            opt_DA.zero_grad(set_to_none=True)
+            fake_A_buf = buf_A.push_and_pop(fake_A.detach()).to(device)
+            with torch.autocast(device_type=device.type, dtype=amp_dtype, enabled=use_amp):
+                l_DA = gan_loss.discriminator_loss(
+                    D_A(real_A,       mask_A,  id_A),
+                    D_A(fake_A_buf,   mask_fA, id_A),
                 )
-            scaler_D.scale(loss_D_B).backward()
-            scaler_D.step(opt_D_B)
-            scaler_D.update()
+            scaler.scale(l_DA).backward()
+            scaler.step(opt_DA)
 
-            # =================================================================
-            # Logging
-            # =================================================================
+            # ── Scaler update (after all three optimizer steps) ───────────
+            scaler.update()
+
+            # ── Progress bar & logging ────────────────────────────────────
+            pbar.set_postfix({
+                'G':  f'{loss_G.item():.3f}',
+                'DA': f'{l_DA.item():.3f}',
+                'DB': f'{l_DB.item():.3f}',
+            })
             logger.log(
                 epoch=epoch,
-                iteration=iteration,
-                loss_G=loss_G.item(),
-                loss_D_A=loss_D_A.item(),
-                loss_D_B=loss_D_B.item(),
-                loss_cycle=l_cyc.item(),
-                loss_identity=l_idt.item(),
-                loss_cls=l_cls.item(),
-                loss_perceptual=l_perc.item(),
+                iteration=it,
+                loss_G=float(loss_G),
+                loss_D_A=float(l_DA),
+                loss_D_B=float(l_DB),
+                loss_cycle=float(l_cyc),
+                loss_identity=float(l_idt),
+                loss_id=float(l_id),
             )
 
-            if iteration % 50 == 0:
-                lr_cur = opt_G.param_groups[1]['lr']  # group 1 = main lr
-                print(
-                    f"Epoch [{epoch:3d}/{total_epochs}] Iter [{iteration:4d}]  "
-                    f"G: {loss_G.item():.4f}  D_A: {loss_D_A.item():.4f}  "
-                    f"D_B: {loss_D_B.item():.4f}  Cyc: {l_cyc.item():.4f}  "
-                    f"Idt: {l_idt.item():.4f}  Cls: {l_cls.item():.4f}  "
-                    f"Perc: {l_perc.item():.4f}  lr: {lr_cur:.2e}"
-                )
+        # ── End of epoch ─────────────────────────────────────────────────────
+        sched_G.step()
+        sched_DA.step()
+        sched_DB.step()
 
-        # ── LR step ──
-        sched_G.step(); sched_D_A.step(); sched_D_B.step(); sched_C.step()
+        current_lr = sched_G.get_last_lr()[0]
+        print(f"[train] Epoch {epoch:03d} done  |  lr={current_lr:.2e}  "
+              f"G={loss_G.item():.4f}  DA={l_DA.item():.4f}  DB={l_DB.item():.4f}")
 
-        # ── Periodic checkpoint + sample grid ──
+        # ── Checkpoint + sample grid every 10 epochs ─────────────────────────
         if epoch % 10 == 0:
-            ckpt_path = os.path.join(config['checkpoint_dir'], f'epoch_{epoch:03d}.pt')
-            save_checkpoint(
-                ckpt_path, epoch,
-                G, D_A, D_B, C,
-                opt_G, opt_D_A, opt_D_B, opt_C,
-                scaler_G, scaler_D, scaler_C,
-                config,
-            )
-            print(f"[checkpoint] Saved: {ckpt_path}")
+            ckpt_path = f'checkpoints/epoch_{epoch:03d}.pt'
+            torch.save({
+                'epoch':         epoch,
+                'base_channels': args.base_channels,
+                'n_res_blocks':  args.n_res_blocks,
+                'G_AB':          G_AB.state_dict(),
+                'G_BA':          G_BA.state_dict(),
+                'D_A':           D_A.state_dict(),
+                'D_B':           D_B.state_dict(),
+                'opt_G':         opt_G.state_dict(),
+                'opt_DA':        opt_DA.state_dict(),
+                'opt_DB':        opt_DB.state_dict(),
+            }, ckpt_path)
+            print(f"[train] Checkpoint saved: {ckpt_path}")
 
-            G.eval()
+            # Visualisation grid (last batch of the epoch, eval mode)
+            G_AB.eval(); G_BA.eval()
             with torch.no_grad():
-                with torch.autocast('cuda', dtype=torch.float16):
-                    vis_fake = G(real_img[:4], tgt_label[:4])
-                    vis_rec  = G(vis_fake,     src_label[:4])
-
-            grid_path = os.path.join(config['sample_dir'], f'epoch_{epoch:03d}.png')
+                vis_A    = real_A[:4]
+                vis_mA   = mask_A[:4]
+                vis_idB  = id_B[:4]
+                vis_idA  = id_A[:4]
+                fake_B_v = G_AB(vis_A, vis_mA, vis_idB)
+                mask_fBv = parsing_net(fake_B_v.float())
+                rec_A_v  = G_BA(fake_B_v, mask_fBv, vis_idA)
             save_sample_grid(
-                real_img[:4].cpu().float(),
-                vis_fake.cpu().float(),
-                vis_rec.cpu().float(),
-                grid_path,
+                vis_A, fake_B_v, rec_A_v,
+                path=f'samples/epoch_{epoch:03d}.png',
             )
-            print(f"[samples]    Saved: {grid_path}")
-            G.train()
+            print(f"[train] Sample grid saved: samples/epoch_{epoch:03d}.png")
+            G_AB.train(); G_BA.train()
 
     print("[train] Training complete.")
 
 
-# =============================================================================
-# Section 4: CLI Entry Point
-# =============================================================================
+# ─────────────────────────────────────────────────────────────────────────────
+# CLI
+# ─────────────────────────────────────────────────────────────────────────────
 
 def parse_args() -> argparse.Namespace:
-    p = argparse.ArgumentParser(description='Train Conditional CycleGAN')
-    p.add_argument('--config',    type=str, default=None,
-                   help='Path to JSON configuration file')
-    p.add_argument('--resume',    type=str, default=None,
-                   help='Checkpoint to resume from')
-    p.add_argument('--log_file',  type=str, default=None,
-                   help='Redirect stdout/stderr to this file')
+    p = argparse.ArgumentParser(
+        description='Conditional CycleGAN face-swap trainer',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    # Data
+    p.add_argument('--train_a',         default='trainA',
+                   help='Domain A image folder (source faces)')
+    p.add_argument('--train_b',         default='trainB',
+                   help='Domain B image folder (target identity faces)')
+    # Architecture
+    p.add_argument('--base_channels',   type=int,   default=64,
+                   help='Base channel width for generators')
+    p.add_argument('--n_res_blocks',    type=int,   default=9,
+                   help='Number of AdaIN residual blocks in each generator')
+    # Training hyperparameters
+    p.add_argument('--epochs',          type=int,   default=200)
+    p.add_argument('--batch_size',      type=int,   default=4)
+    p.add_argument('--lr',              type=float, default=2e-4)
+    p.add_argument('--lambda_cycle',    type=float, default=10.0,
+                   help='Weight for cycle-consistency loss')
+    p.add_argument('--lambda_id',       type=float, default=2.0,
+                   help='Weight for identity-retention loss')
+    # Infrastructure
+    p.add_argument('--num_workers',     type=int,   default=0,
+                   help='DataLoader workers (use 0 on Windows to avoid issues)')
+    p.add_argument('--bisenet_weights', default=None,
+                   help='Path to BiSeNet 79999_iter.pth (auto-downloaded if absent)')
+    p.add_argument('--resume',          default=None,
+                   help='Path to checkpoint .pt file to resume training from')
     return p.parse_args()
 
 
 if __name__ == '__main__':
-    args = parse_args()
-
-    if args.log_file:
-        os.makedirs(os.path.dirname(os.path.abspath(args.log_file)), exist_ok=True)
-        log_fh     = open(args.log_file, 'a', buffering=1)
-        sys.stdout = log_fh
-        sys.stderr = log_fh
-
-    config = load_config(args.config) if args.config else DEFAULT_CONFIG.copy()
-    print(f"[config] {json.dumps(config, indent=2)}")
-
-    train(config, resume_path=args.resume)
+    train(parse_args())

@@ -1,285 +1,166 @@
-# =============================================================================
-# utils.py — count_params, save_sample_grid, checkpoint I/O, loss logger
-#
-# Shared utilities used by train.py and infer.py.
-# =============================================================================
+"""
+utils.py — count_params, save_sample_grid, load_checkpoint, BiSeNet weight downloader
+"""
 
-import os
-import csv
-from typing import Any, Dict
+import sys
+import urllib.request
+from pathlib import Path
+from typing import Optional
 
 import torch
 import torch.nn as nn
+from torch import Tensor
 from torchvision.utils import save_image
 
 
-# =============================================================================
-# Section 1: Parameter Count Verification
-# =============================================================================
+# ─────────────────────────────────────────────────────────────────────────────
+# Parameter Counter
+# ─────────────────────────────────────────────────────────────────────────────
 
 def count_params(model: nn.Module) -> int:
     """
-    Count the number of trainable parameters in a module.
+    Count the total number of trainable parameters in a model.
 
     Args:
         model : any nn.Module
     Returns:
-        count : total number of parameters where requires_grad=True
+        count : int
     """
     return sum(p.numel() for p in model.parameters() if p.requires_grad)
 
 
-def verify_param_count(
-    G:   nn.Module,
-    D_A: nn.Module,
-    D_B: nn.Module,
-    C:   nn.Module,
-) -> int:
-    """
-    Print per-model and total parameter counts, then assert total ≤ 60M.
-
-    Args:
-        G   : Generator
-        D_A : Discriminator A
-        D_B : Discriminator B
-        C   : Auxiliary Classifier
-    Returns:
-        total : combined trainable parameter count
-    Raises:
-        AssertionError : if total exceeds 60,000,000
-    """
-    g_params   = count_params(G)
-    d_a_params = count_params(D_A)
-    d_b_params = count_params(D_B)
-    c_params   = count_params(C)
-    total      = g_params + d_a_params + d_b_params + c_params
-
-    print(f"G params:     {g_params:,}")
-    print(f"D_A params:   {d_a_params:,}")
-    print(f"D_B params:   {d_b_params:,}")
-    print(f"C params:     {c_params:,}")
-    print(f"Total params: {total:,}")
-    # No hard cap — report only (pretrained encoder removes the earlier 60M constraint)
-    return total
-
-
-# =============================================================================
-# Section 2: Sample Grid Saving
-# =============================================================================
+# ─────────────────────────────────────────────────────────────────────────────
+# Sample Grid
+# ─────────────────────────────────────────────────────────────────────────────
 
 def save_sample_grid(
-    real_A:    torch.Tensor,
-    fake_B:    torch.Tensor,
-    rec_A:     torch.Tensor,
-    save_path: str,
-    nrow:      int = 4,
+    real_A: Tensor,
+    fake_B: Tensor,
+    rec_A:  Tensor,
+    path:   str,
+    nrow:   int = 4,
 ) -> None:
     """
-    Save a 3-row visual grid to disk using torchvision.
+    Save a 3-row visual sample grid to disk.
 
-        Row 1: real_A  — original source images
-        Row 2: fake_B  — G(real_A, c_tgt) translated images
-        Row 3: rec_A   — G(fake_B, c_src) reconstructed images
-
-    Args:
-        real_A    : (B, 3, 256, 256) real source images in [-1, 1]
-        fake_B    : (B, 3, 256, 256) translated images in [-1, 1]
-        rec_A     : (B, 3, 256, 256) reconstructed images in [-1, 1]
-        save_path : output file path (PNG)
-        nrow      : images per row in the grid (default 4)
-    """
-    os.makedirs(os.path.dirname(os.path.abspath(save_path)), exist_ok=True)
-    grid = torch.cat([
-        real_A.float().clamp(-1, 1),
-        fake_B.float().clamp(-1, 1),
-        rec_A.float().clamp(-1, 1),
-    ], dim=0)
-    save_image(grid, save_path, nrow=nrow, normalize=True, value_range=(-1, 1))
-
-
-# =============================================================================
-# Section 3: Checkpoint Save / Load
-# =============================================================================
-
-def save_checkpoint(
-    path:      str,
-    epoch:     int,
-    G:         nn.Module,
-    D_A:       nn.Module,
-    D_B:       nn.Module,
-    C:         nn.Module,
-    opt_G:     torch.optim.Optimizer,
-    opt_D_A:   torch.optim.Optimizer,
-    opt_D_B:   torch.optim.Optimizer,
-    opt_C:     torch.optim.Optimizer,
-    scaler_G:  torch.amp.GradScaler,
-    scaler_D:  torch.amp.GradScaler,
-    scaler_C:  torch.amp.GradScaler,
-    config:    Dict[str, Any],
-) -> None:
-    """
-    Save a full training checkpoint to disk.
-
-    Stores model weights, optimiser states, GradScaler states, epoch index,
-    and the training config so a run can be resumed exactly.
+      Row 1 : real_A — original Domain A images
+      Row 2 : fake_B — translated to Domain B by G_AB
+      Row 3 : rec_A  — reconstructed from fake_B by G_BA
 
     Args:
-        path     : output .pt file path
-        epoch    : current epoch number (saved so resume starts at epoch+1)
-        G        : Generator
-        D_A      : Discriminator A
-        D_B      : Discriminator B
-        C        : Auxiliary Classifier
-        opt_G    : Generator optimiser state
-        opt_D_A  : Discriminator A optimiser state
-        opt_D_B  : Discriminator B optimiser state
-        opt_C    : Classifier optimiser state
-        scaler_G : GradScaler for generator
-        scaler_D : GradScaler for discriminators
-        scaler_C : GradScaler for classifier
-        config   : training configuration dict
+        real_A : (B, 3, H, W)  in [-1, 1]
+        fake_B : (B, 3, H, W)  in [-1, 1]
+        rec_A  : (B, 3, H, W)  in [-1, 1]
+        path   : output PNG file path
+        nrow   : images per row (should equal batch size, default 4)
     """
-    os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
-    torch.save({
-        'epoch':          epoch,
-        'G_state':        G.state_dict(),
-        'D_A_state':      D_A.state_dict(),
-        'D_B_state':      D_B.state_dict(),
-        'C_state':        C.state_dict(),
-        'opt_G_state':    opt_G.state_dict(),
-        'opt_D_A_state':  opt_D_A.state_dict(),
-        'opt_D_B_state':  opt_D_B.state_dict(),
-        'opt_C_state':    opt_C.state_dict(),
-        'scaler_G_state': scaler_G.state_dict(),
-        'scaler_D_state': scaler_D.state_dict(),
-        'scaler_C_state': scaler_C.state_dict(),
-        'config':         config,
-    }, path)
+    Path(path).parent.mkdir(parents=True, exist_ok=True)
+    imgs = torch.cat(
+        [real_A.cpu(), fake_B.cpu(), rec_A.cpu()],
+        dim=0,
+    )                                          # (3B, 3, H, W)
+    save_image(imgs, path, nrow=nrow, normalize=True, value_range=(-1.0, 1.0))
 
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Checkpoint I/O
+# ─────────────────────────────────────────────────────────────────────────────
 
 def load_checkpoint(
-    path:     str,
-    G:        nn.Module,
-    D_A:      nn.Module,
-    D_B:      nn.Module,
-    C:        nn.Module,
-    opt_G:    torch.optim.Optimizer,
-    opt_D_A:  torch.optim.Optimizer,
-    opt_D_B:  torch.optim.Optimizer,
-    opt_C:    torch.optim.Optimizer,
-    scaler_G: torch.amp.GradScaler,
-    scaler_D: torch.amp.GradScaler,
-    scaler_C: torch.amp.GradScaler,
-    device:   torch.device,
+    path:   str,
+    G_AB:   nn.Module,
+    G_BA:   nn.Module,
+    D_A:    nn.Module,
+    D_B:    nn.Module,
+    opt_G:  torch.optim.Optimizer,
+    opt_DA: torch.optim.Optimizer,
+    opt_DB: torch.optim.Optimizer,
+    device: torch.device,
 ) -> int:
     """
-    Load a full training checkpoint and restore all states in-place.
+    Load a full training checkpoint into models and optimisers.
 
     Args:
-        path     : .pt checkpoint file path
-        G        : Generator        (mutated in-place)
-        D_A      : Discriminator A  (mutated in-place)
-        D_B      : Discriminator B  (mutated in-place)
-        C        : Classifier       (mutated in-place)
-        opt_G    : Generator optimiser       (mutated in-place)
-        opt_D_A  : Discriminator A optimiser (mutated in-place)
-        opt_D_B  : Discriminator B optimiser (mutated in-place)
-        opt_C    : Classifier optimiser      (mutated in-place)
-        scaler_G : GradScaler for G  (mutated in-place)
-        scaler_D : GradScaler for D  (mutated in-place)
-        scaler_C : GradScaler for C  (mutated in-place)
-        device   : device to map checkpoint tensors to
+        path   : path to .pt checkpoint file
+        G_AB   : Generator A→B
+        G_BA   : Generator B→A
+        D_A    : Discriminator A
+        D_B    : Discriminator B
+        opt_G  : Generator optimiser
+        opt_DA : Discriminator A optimiser
+        opt_DB : Discriminator B optimiser
+        device : device to map tensors onto
     Returns:
-        start_epoch : epoch to resume from (= saved_epoch + 1)
+        epoch  : the epoch number stored in the checkpoint (int)
     """
     ckpt = torch.load(path, map_location=device)
-
-    G.load_state_dict(ckpt['G_state'])
-    D_A.load_state_dict(ckpt['D_A_state'])
-    D_B.load_state_dict(ckpt['D_B_state'])
-    C.load_state_dict(ckpt['C_state'])
-
-    opt_G.load_state_dict(ckpt['opt_G_state'])
-    opt_D_A.load_state_dict(ckpt['opt_D_A_state'])
-    opt_D_B.load_state_dict(ckpt['opt_D_B_state'])
-    opt_C.load_state_dict(ckpt['opt_C_state'])
-
-    scaler_G.load_state_dict(ckpt['scaler_G_state'])
-    scaler_D.load_state_dict(ckpt['scaler_D_state'])
-    scaler_C.load_state_dict(ckpt['scaler_C_state'])
-
-    start_epoch = ckpt['epoch'] + 1
-    print(f"[checkpoint] Resumed from {path}  (epoch {ckpt['epoch']} → resuming at {start_epoch})")
-    return start_epoch
+    G_AB.load_state_dict(ckpt['G_AB'])
+    G_BA.load_state_dict(ckpt['G_BA'])
+    D_A.load_state_dict(ckpt['D_A'])
+    D_B.load_state_dict(ckpt['D_B'])
+    opt_G.load_state_dict(ckpt['opt_G'])
+    opt_DA.load_state_dict(ckpt['opt_DA'])
+    opt_DB.load_state_dict(ckpt['opt_DB'])
+    return int(ckpt['epoch'])
 
 
-# =============================================================================
-# Section 4: CSV Loss Logger
-# =============================================================================
+# ─────────────────────────────────────────────────────────────────────────────
+# BiSeNet Weight Downloader
+# ─────────────────────────────────────────────────────────────────────────────
 
-class LossLogger:
+# Primary and fallback URLs for BiSeNet face-parsing weights (79999_iter.pth, ~53 MB)
+_BISENET_URLS = [
+    # HuggingFace mirrors — direct HTTP downloads, no auth required
+    "https://huggingface.co/camenduru/MuseTalk/resolve/main/face-parse-bisent/79999_iter.pth",
+    "https://huggingface.co/vivym/face-parsing-bisenet/resolve/768606b84908769d31ddd78b2e1105319839edfa/79999_iter.pth",
+    "https://huggingface.co/OwlMaster/AllFilesRope/resolve/main/79999_iter.pth",
+]
+_BISENET_DEST = "pretrained/bisenet_79999.pth"
+
+
+def download_bisenet_weights(dest: str = _BISENET_DEST) -> str:
     """
-    Append-mode CSV logger for per-iteration training losses.
+    Download pre-trained BiSeNet face-parsing weights (79999_iter.pth) if absent.
 
-    Columns: epoch, iteration, loss_G, loss_D_A, loss_D_B,
-             loss_cycle, loss_identity, loss_cls
-
-    The CSV header is written once on first creation; subsequent runs that
-    resume from a checkpoint append to the same file.
+    Tries multiple HuggingFace mirrors in order; raises RuntimeError if all fail.
 
     Args:
-        log_path : path to the output CSV file (created if absent)
+        dest : local destination path (default 'pretrained/bisenet_79999.pth')
+    Returns:
+        dest : path to the (now-present) weights file
     """
+    if Path(dest).exists():
+        return dest
+    Path(dest).parent.mkdir(parents=True, exist_ok=True)
 
-    FIELDS = [
-        'epoch', 'iteration',
-        'loss_G', 'loss_D_A', 'loss_D_B',
-        'loss_cycle', 'loss_identity', 'loss_cls', 'loss_perceptual',
-    ]
+    last_exc: Optional[Exception] = None
+    for url in _BISENET_URLS:
+        print(f"[utils] Downloading BiSeNet weights → {dest}")
+        print(f"[utils] Source: {url}")
+        try:
+            urllib.request.urlretrieve(url, dest, _progress_hook)
+            print()   # newline after progress bar
+            return dest
+        except Exception as exc:
+            print(f"\n[utils] Failed ({exc}), trying next mirror…")
+            last_exc = exc
+            # Remove partial download before retrying
+            if Path(dest).exists():
+                Path(dest).unlink()
 
-    def __init__(self, log_path: str):
-        self.log_path = log_path
-        os.makedirs(os.path.dirname(os.path.abspath(log_path)), exist_ok=True)
-        if not os.path.exists(log_path):
-            with open(log_path, 'w', newline='') as f:
-                csv.DictWriter(f, fieldnames=self.FIELDS).writeheader()
+    raise RuntimeError(
+        f"\nAll download mirrors failed for BiSeNet weights.\n"
+        f"Please download 79999_iter.pth manually from any of:\n"
+        + "\n".join(f"  {u}" for u in _BISENET_URLS)
+        + f"\nand place the file at:  {dest}\n"
+        f"Then pass --bisenet_weights {dest} to the script.\n"
+        f"Last error: {last_exc}"
+    ) from last_exc
 
-    def log(
-        self,
-        epoch:            int,
-        iteration:        int,
-        loss_G:           float,
-        loss_D_A:         float,
-        loss_D_B:         float,
-        loss_cycle:       float,
-        loss_identity:    float,
-        loss_cls:         float,
-        loss_perceptual:  float,
-    ) -> None:
-        """
-        Append one row to the CSV.
 
-        Args:
-            epoch            : current epoch number
-            iteration        : current iteration within the epoch
-            loss_G           : total generator loss (weighted sum)
-            loss_D_A         : discriminator A loss
-            loss_D_B         : discriminator B loss
-            loss_cycle       : cycle-consistency loss (weighted)
-            loss_identity    : identity loss (weighted)
-            loss_cls         : classification loss (weighted)
-            loss_perceptual  : perceptual (VGG16) loss (weighted)
-        """
-        with open(self.log_path, 'a', newline='') as f:
-            writer = csv.DictWriter(f, fieldnames=self.FIELDS)
-            writer.writerow({
-                'epoch':            epoch,
-                'iteration':        iteration,
-                'loss_G':           f"{loss_G:.6f}",
-                'loss_D_A':         f"{loss_D_A:.6f}",
-                'loss_D_B':         f"{loss_D_B:.6f}",
-                'loss_cycle':       f"{loss_cycle:.6f}",
-                'loss_identity':    f"{loss_identity:.6f}",
-                'loss_cls':         f"{loss_cls:.6f}",
-                'loss_perceptual':  f"{loss_perceptual:.6f}",
-            })
+def _progress_hook(count: int, block_size: int, total_size: int) -> None:
+    """urllib.request.urlretrieve progress callback."""
+    if total_size > 0:
+        pct = min(100, count * block_size * 100 // total_size)
+        sys.stdout.write(f'\r  {pct:3d}%')
+        sys.stdout.flush()

@@ -1,268 +1,331 @@
-# =============================================================================
-# infer.py — Inference Pipeline for Conditional CycleGAN
-#
-# Single-image inference:
-#   python infer.py --checkpoint checkpoints/epoch_200.pt \
-#                   --input      test_samples/player_01.png \
-#                   --target_team 2 \
-#                   --num_teams  4 \
-#                   --output     results/player_01_teamC.png
-#
-# Batch inference:
-#   python infer.py --checkpoint checkpoints/epoch_200.pt \
-#                   --input_dir  test_samples/ \
-#                   --target_team 2 \
-#                   --num_teams  4 \
-#                   --output_dir results/
-# =============================================================================
+"""
+infer.py — Inference pipeline for Conditional CycleGAN face swapping
+
+Single-image mode:
+    python infer.py \\
+        --checkpoint  checkpoints/epoch_200.pt \\
+        --target_image    path/to/target.png \\
+        --reference_image path/to/reference.png \\
+        --output          output.png
+
+Batch mode (folder of targets, single reference):
+    python infer.py \\
+        --checkpoint      checkpoints/epoch_200.pt \\
+        --target_folder   faces/ \\
+        --reference_image bradpitt_circle_256/001_c04300ef.png \\
+        --output_folder   swapped_output/
+"""
 
 import argparse
-import os
-import sys
 import time
-
-# Ensure project directory is first on sys.path so local modules take
-# priority over any same-named packages in the Python environment.
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from pathlib import Path
-from typing import Optional
+from typing import Tuple
 
 import torch
+import torch.nn.functional as F
+from PIL import Image
+from torch import Tensor
+from torch.utils.data import DataLoader, Dataset
 from torchvision import transforms
 from torchvision.utils import save_image
-from PIL import Image
 
-from models import Generator
+from models import Generator, IdentityExtractor, ParsingNet
+from utils import download_bisenet_weights
 
 
-# =============================================================================
-# Section 1: Image Pre/Post-Processing Utilities
-# =============================================================================
+# ─────────────────────────────────────────────────────────────────────────────
+# Image I/O helpers
+# ─────────────────────────────────────────────────────────────────────────────
 
-INFER_TRANSFORM = transforms.Compose([
-    transforms.Resize((256, 256)),
+_TO_TENSOR = transforms.Compose([
+    transforms.Resize((256, 256), transforms.InterpolationMode.BICUBIC),
     transforms.ToTensor(),
-    transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]),
+    transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5]),
 ])
 
+_IMG_EXTS = {'.png', '.jpg', '.jpeg', '.bmp', '.webp'}
 
-def load_image(path: str) -> torch.Tensor:
+
+def _load_image(path: str, device: torch.device) -> Tensor:
     """
-    Load and normalise a single PNG image to [-1, 1].
+    Load a single image from disk, resize to 256×256 and normalise to [-1, 1].
 
     Args:
-        path : path to a 256×256 PNG image
+        path   : path to image file
+        device : torch device
     Returns:
-        img  : (1, 3, 256, 256) float tensor normalised to [-1, 1]
+        img    : (1, 3, 256, 256) float tensor on `device`, values in [-1, 1]
     """
     img = Image.open(path).convert('RGB')
-    return INFER_TRANSFORM(img).unsqueeze(0)  # (1, 3, 256, 256)
+    return _TO_TENSOR(img).unsqueeze(0).to(device)
 
 
-def denormalise_and_save(tensor: torch.Tensor, output_path: str) -> None:
+def _denorm(t: Tensor) -> Tensor:
     """
-    Denormalise a [-1, 1] tensor to [0, 255] and save as PNG.
+    Denormalise from [-1, 1] to [0, 1].
 
     Args:
-        tensor      : (1, 3, 256, 256) float tensor in [-1, 1]
-        output_path : destination file path
-    """
-    os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
-    save_image(tensor.clamp(-1, 1), output_path, normalize=True, value_range=(-1, 1))
-
-
-# =============================================================================
-# Section 2: Model Loading
-# =============================================================================
-
-def load_generator(
-    checkpoint_path: str,
-    num_teams:       int,
-    device:          torch.device,
-) -> Generator:
-    """
-    Load a trained Generator from a checkpoint file.
-
-    Args:
-        checkpoint_path : path to a .pt checkpoint saved by train.py
-        num_teams       : total number of teams the model was trained on
-        device          : torch device to load onto
+        t   : (*, 3, H, W) tensor in [-1, 1]
     Returns:
-        G : Generator in eval mode, weights restored from checkpoint
+        out : (*, 3, H, W) tensor in [0, 1]
+    """
+    return (t.clamp(-1.0, 1.0) + 1.0) / 2.0
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Model loading
+# ─────────────────────────────────────────────────────────────────────────────
+
+def load_models(
+    checkpoint_path: str,
+    bisenet_weights: str,
+    device:          torch.device,
+) -> Tuple[Generator, IdentityExtractor, ParsingNet]:
+    """
+    Load the trained generator and pretrained auxiliary models in eval mode.
+
+    Args:
+        checkpoint_path : path to .pt training checkpoint (must contain 'G_AB')
+        bisenet_weights : path to BiSeNet 79999_iter.pth
+        device          : torch device
+    Returns:
+        G_AB         : Generator A→B in eval mode
+        id_extractor : IdentityExtractor in eval mode
+        parsing_net  : ParsingNet in eval mode
     """
     ckpt = torch.load(checkpoint_path, map_location=device)
+    base_channels = ckpt.get('base_channels', 64)
+    n_res_blocks  = ckpt.get('n_res_blocks',  9)
 
-    # Recover embed_dim and num_blocks from checkpoint config if available
-    cfg        = ckpt.get('config', {})
-    embed_dim  = cfg.get('embed_dim',      256)
-    num_blocks = cfg.get('num_res_blocks', 9)
+    G_AB = Generator(base_channels=base_channels, n_res_blocks=n_res_blocks).to(device)
+    G_AB.load_state_dict(ckpt['G_AB'])
+    G_AB.eval()
 
-    G = Generator(num_teams, embed_dim=embed_dim, num_blocks=num_blocks).to(device)
-    G.load_state_dict(ckpt['G_state'])
-    G.eval()
-    print(f"[infer] Loaded generator from {checkpoint_path}  "
-          f"(embed_dim={embed_dim}, num_blocks={num_blocks}, num_teams={num_teams})")
-    return G
+    id_extractor = IdentityExtractor(device)
+    parsing_net  = ParsingNet(bisenet_weights, device)
+
+    print(
+        f"[infer] Loaded checkpoint epoch {ckpt.get('epoch', '?')}  "
+        f"(base_channels={base_channels}, n_res_blocks={n_res_blocks})"
+    )
+    return G_AB, id_extractor, parsing_net
 
 
-# =============================================================================
-# Section 3: Single-Image Inference
-# =============================================================================
+# ─────────────────────────────────────────────────────────────────────────────
+# Single-image inference
+# ─────────────────────────────────────────────────────────────────────────────
 
-def infer_single(
-    G:           Generator,
-    input_path:  str,
-    target_team: int,
-    output_path: str,
-    device:      torch.device,
+@torch.no_grad()
+def run_inference(
+    G_AB:           torch.nn.Module,
+    id_extractor:   torch.nn.Module,
+    parsing_net:    torch.nn.Module,
+    target_path:    str,
+    reference_path: str,
+    output_path:    str,
+    device:         torch.device,
 ) -> None:
     """
-    Translate a single jersey image to the target team domain and save.
+    Translate a single target image using a reference identity.
+
+    Steps:
+      1. Load and normalise target and reference images.
+      2. Extract 512-D identity vector from the reference image.
+      3. Extract 11-channel parsing mask from the target image.
+      4. Forward through G_AB: fake = G(target_with_mask, id_ref).
+      5. Reapply the target's circular background mask to the output.
+      6. Denormalise and save as PNG.
 
     Args:
-        G           : loaded Generator in eval mode
-        input_path  : path to a preprocessed 256×256 PNG jersey image
-        target_team : integer label index of the target team (e.g. 0, 1, 2)
-        output_path : file path for the translated output PNG
-        device      : torch device
+        G_AB           : trained Generator (A→B)
+        id_extractor   : ArcFace identity extractor
+        parsing_net    : face parsing network
+        target_path    : path to target image (provides pose/expression)
+        reference_path : path to reference image (provides identity)
+        output_path    : destination PNG path
+        device         : torch device
     """
-    img   = load_image(input_path).to(device)                        # (1, 3, 256, 256)
-    label = torch.tensor([target_team], dtype=torch.long, device=device)
+    target    = _load_image(target_path,    device)   # (1, 3, 256, 256)
+    reference = _load_image(reference_path, device)   # (1, 3, 256, 256)
 
-    with torch.no_grad():
-        fake = G(img, label)                                          # (1, 3, 256, 256)
+    mask_target = parsing_net(target)                 # (1, 11, 256, 256)
+    id_ref      = id_extractor(reference)             # (1, 512)
 
-    denormalise_and_save(fake.cpu(), output_path)
-    print(f"[infer] {input_path}  →  {output_path}  (team {target_team})")
+    fake = G_AB(target, mask_target, id_ref)          # (1, 3, 256, 256)
+
+    # Restore the circular background mask from the target image
+    bg_mask = (target.max(dim=1, keepdim=True).values > -0.99).float()
+    fake    = fake * bg_mask + (-1.0) * (1.0 - bg_mask)
+
+    out = _denorm(fake)                               # (1, 3, 256, 256) in [0, 1]
+    Path(output_path).parent.mkdir(parents=True, exist_ok=True)
+    save_image(out, output_path)
+    print(f"[infer] Saved: {output_path}")
 
 
-# =============================================================================
-# Section 4: Batch Inference
-# =============================================================================
+# ─────────────────────────────────────────────────────────────────────────────
+# Batch inference
+# ─────────────────────────────────────────────────────────────────────────────
 
-IMG_EXTENSIONS = {'.png', '.jpg', '.jpeg', '.bmp', '.tiff', '.webp'}
+class _FolderDataset(Dataset):
+    """Minimal dataset that loads images from a flat folder."""
+
+    def __init__(self, folder: str):
+        self.paths = sorted(
+            str(p) for p in Path(folder).iterdir()
+            if p.suffix.lower() in _IMG_EXTS
+        )
+        if not self.paths:
+            raise ValueError(f"No images found in {folder}")
+
+    def __len__(self) -> int:
+        return len(self.paths)
+
+    def __getitem__(self, i: int) -> Tuple[Tensor, str]:
+        img = Image.open(self.paths[i]).convert('RGB')
+        return _TO_TENSOR(img), self.paths[i]
 
 
-def infer_batch(
-    G:           Generator,
-    input_dir:   str,
-    target_team: int,
-    output_dir:  str,
-    device:      torch.device,
+@torch.no_grad()
+def batch_inference(
+    G_AB:           torch.nn.Module,
+    id_extractor:   torch.nn.Module,
+    parsing_net:    torch.nn.Module,
+    target_folder:  str,
+    reference_path: str,
+    output_folder:  str,
+    device:         torch.device,
+    batch_size:     int = 8,
 ) -> None:
     """
-    Run inference on every image in input_dir and save results to output_dir.
+    Run inference on every image in `target_folder` using a single reference identity.
 
-    Reports per-image inference time and average throughput.
+    Results are saved to `output_folder` with the same filenames as the inputs.
+    Per-image inference time and throughput are printed on completion.
 
     Args:
-        G           : loaded Generator in eval mode
-        input_dir   : folder containing preprocessed 256×256 PNG images
-        target_team : integer label index of the target team
-        output_dir  : folder to write translated images (created if absent)
-        device      : torch device
+        G_AB           : trained Generator (A→B)
+        id_extractor   : ArcFace identity extractor
+        parsing_net    : face parsing network
+        target_folder  : folder of target images (all are processed)
+        reference_path : path to the single reference image (identity source)
+        output_folder  : folder where translated images are written
+        device         : torch device
+        batch_size     : number of images processed per forward pass
     """
-    os.makedirs(output_dir, exist_ok=True)
-    image_paths = sorted([
-        p for p in Path(input_dir).iterdir()
-        if p.suffix.lower() in IMG_EXTENSIONS
-    ])
+    Path(output_folder).mkdir(parents=True, exist_ok=True)
 
-    if not image_paths:
-        print(f"[infer] No images found in {input_dir}")
-        return
+    dataset = _FolderDataset(target_folder)
+    loader  = DataLoader(dataset, batch_size=batch_size, num_workers=0, pin_memory=True)
 
-    label      = torch.tensor([target_team], dtype=torch.long, device=device)
-    times      = []
+    # Pre-extract reference identity once
+    ref    = _load_image(reference_path, device)   # (1, 3, 256, 256)
+    id_ref = id_extractor(ref)                     # (1, 512)
 
-    print(f"[infer] Batch: {len(image_paths)} images  →  team {target_team}")
-    print(f"[infer] Output: {output_dir}")
+    total_images   = 0
+    per_img_times  = []
+    wall_start     = time.perf_counter()
 
-    for img_path in image_paths:
-        img = load_image(str(img_path)).to(device)
+    for imgs, paths in loader:
+        imgs    = imgs.to(device)                  # (B, 3, 256, 256)
+        B       = imgs.shape[0]
+        id_batch = id_ref.expand(B, -1)            # (B, 512)
 
-        # Synchronise GPU before timing
-        if device.type == 'cuda':
-            torch.cuda.synchronize()
         t0 = time.perf_counter()
 
-        with torch.no_grad():
-            fake = G(img, label)
+        masks = parsing_net(imgs)                  # (B, 11, 256, 256)
+        fakes = G_AB(imgs, masks, id_batch)        # (B, 3,  256, 256)
 
         if device.type == 'cuda':
             torch.cuda.synchronize()
         elapsed = time.perf_counter() - t0
-        times.append(elapsed)
+        per_img_times.append(elapsed / B)
 
-        out_path = os.path.join(output_dir, img_path.name)
-        denormalise_and_save(fake.cpu(), out_path)
-        print(f"  {img_path.name}  {elapsed * 1000:.1f} ms  →  {out_path}")
+        # Reapply circular background mask from each target
+        bg_mask = (imgs.max(dim=1, keepdim=True).values > -0.99).float()
+        fakes   = fakes * bg_mask + (-1.0) * (1.0 - bg_mask)
+        fakes   = _denorm(fakes)                   # (B, 3, 256, 256) in [0, 1]
 
-    avg_time       = sum(times) / len(times)
-    throughput     = 1.0 / avg_time
-    print(f"\n[infer] Processed {len(image_paths)} images")
-    print(f"[infer] Average time : {avg_time * 1000:.1f} ms/image")
-    print(f"[infer] Throughput   : {throughput:.2f} images/sec")
+        for i, path in enumerate(paths):
+            out_path = Path(output_folder) / Path(path).name
+            save_image(fakes[i], str(out_path))
+
+        total_images += B
+
+    wall_elapsed  = time.perf_counter() - wall_start
+    avg_ms        = sum(per_img_times) / len(per_img_times) * 1000
+    throughput    = total_images / wall_elapsed
+
+    print(f"[batch_infer] Processed    : {total_images} images")
+    print(f"[batch_infer] Avg time/img : {avg_ms:.1f} ms")
+    print(f"[batch_infer] Throughput   : {throughput:.1f} images/sec")
+    print(f"[batch_infer] Output saved : {output_folder}/")
 
 
-# =============================================================================
-# Section 5: CLI Entry Point
-# =============================================================================
+# ─────────────────────────────────────────────────────────────────────────────
+# CLI
+# ─────────────────────────────────────────────────────────────────────────────
 
 def parse_args() -> argparse.Namespace:
-    """Parse command-line arguments for single and batch inference."""
     p = argparse.ArgumentParser(
-        description='Inference for Conditional CycleGAN Jersey Translator'
+        description='Conditional CycleGAN face-swap inference',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    p.add_argument('--checkpoint',   type=str, required=True,
-                   help='Path to .pt checkpoint file')
-    p.add_argument('--num_teams',    type=int, required=True,
-                   help='Total number of teams the model was trained on')
-    p.add_argument('--target_team',  type=int, required=True,
-                   help='Target team label index (0-based)')
-
+    p.add_argument('--checkpoint',       required=True,
+                   help='Path to .pt training checkpoint')
+    p.add_argument('--bisenet_weights',  default=None,
+                   help='Path to BiSeNet 79999_iter.pth (auto-downloaded if absent)')
+    p.add_argument('--reference_image',  required=True,
+                   help='Reference image providing the target identity')
     # Single-image mode
-    p.add_argument('--input',        type=str, default=None,
-                   help='Path to a single 256×256 input image')
-    p.add_argument('--output',       type=str, default=None,
-                   help='Output file path for single-image inference')
-
+    p.add_argument('--target_image',     default=None,
+                   help='Target image (pose/expression canvas) for single-image mode')
+    p.add_argument('--output',           default='output.png',
+                   help='Output path for single-image mode')
     # Batch mode
-    p.add_argument('--input_dir',    type=str, default=None,
-                   help='Folder of input images for batch inference')
-    p.add_argument('--output_dir',   type=str, default=None,
-                   help='Output folder for batch inference results')
-
-    p.add_argument('--cpu',          action='store_true',
-                   help='Force CPU inference even if CUDA is available')
+    p.add_argument('--target_folder',    default=None,
+                   help='Folder of target images for batch mode')
+    p.add_argument('--output_folder',    default='output_batch',
+                   help='Output folder for batch mode')
+    p.add_argument('--batch_size',       type=int, default=8,
+                   help='Batch size for batch mode')
     return p.parse_args()
 
 
-if __name__ == '__main__':
+def main() -> None:
     args   = parse_args()
-    device = torch.device('cpu' if args.cpu or not torch.cuda.is_available() else 'cuda')
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(f"[infer] Device: {device}")
 
-    # Validate target team index
-    if not (0 <= args.target_team < args.num_teams):
-        raise ValueError(
-            f"--target_team {args.target_team} is out of range "
-            f"[0, {args.num_teams - 1}]"
+    bisenet_weights = args.bisenet_weights
+    if not bisenet_weights or not Path(bisenet_weights).exists():
+        bisenet_weights = download_bisenet_weights()
+
+    G_AB, id_extractor, parsing_net = load_models(
+        args.checkpoint, bisenet_weights, device
+    )
+
+    if args.target_folder:
+        batch_inference(
+            G_AB, id_extractor, parsing_net,
+            args.target_folder,
+            args.reference_image,
+            args.output_folder,
+            device,
+            batch_size=args.batch_size,
         )
-
-    G = load_generator(args.checkpoint, args.num_teams, device)
-
-    if args.input is not None:
-        # ── Single-image mode ──
-        if args.output is None:
-            raise ValueError("--output must be specified with --input")
-        infer_single(G, args.input, args.target_team, args.output, device)
-
-    elif args.input_dir is not None:
-        # ── Batch mode ──
-        if args.output_dir is None:
-            raise ValueError("--output_dir must be specified with --input_dir")
-        infer_batch(G, args.input_dir, args.target_team, args.output_dir, device)
-
+    elif args.target_image:
+        run_inference(
+            G_AB, id_extractor, parsing_net,
+            args.target_image,
+            args.reference_image,
+            args.output,
+            device,
+        )
     else:
-        raise ValueError("Provide either --input (single) or --input_dir (batch)")
+        print("[infer] Error: provide --target_image (single) or --target_folder (batch).")
+        raise SystemExit(1)
+
+
+if __name__ == '__main__':
+    main()
