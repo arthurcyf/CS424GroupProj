@@ -23,6 +23,9 @@ trainB/
 trainC/
 trainD/
 test_samples/
+dataset/
+bradpitt_circle_bounded/
+ronaldo/
 
 # ── Python ───────────────────────────────────────────────────────────────────
 __pycache__/

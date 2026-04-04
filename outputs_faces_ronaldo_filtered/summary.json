@@ -1,0 +1,3984 @@
+{
+  "total": 286,
+  "processed": 286,
+  "saved_images": 167,
+  "saved_faces": 168,
+  "skipped": 119,
+  "errors": 0,
+  "skip_reasons": {
+    "no_verified_face": 105,
+    "no_person": 7,
+    "no_visible_face": 7
+  },
+  "records": [
+    {
+      "path": "ronaldo\\1410474841f96af.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8248711228370667,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\15sporonmug1a.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8475356101989746,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\16799487785329.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8831257820129395,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\187520692_9ce0e1e0a5_c.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8970702290534973,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\187520785_e277112807_c.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.920452892780304,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\2.ronaldo_564x694.png",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8312872648239136,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\2018-636526661449678781-967.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8538328409194946,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\7c29a04cad851f1058bef3350945d0e869d10f10.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.8366565704345703,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\7c36815433efb7a8adc6c4ab6af2d117.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8799616098403931,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\885.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.744167149066925,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\893306_1.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.874218225479126,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\9b001191f75c49f0bbacada10ce84b6d.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.4626258313655853,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\article-2356678-1AAAA219000005DC-899_1024x615_large.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8347919583320618,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\b0e84cc5-1b91-496a-96a0-a91a555a02af.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.8189258575439453,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\b35cb705bac62505a0ebcedc435a45c8.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8888777494430542,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\belgium-v-portugal-uefa-euro-2020-round-of-16.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.851378858089447,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\best-looks-of-ronaldo-on-his-face-structure.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8026300072669983,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\c359fa0809bf5044c93192f4caada02c.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9206112623214722,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\c_url=https_3A_2F_2Fimages.teamtalk.com_2Fcontent_2Fuploads_2F2022_2F05_2F26102704_2FCristiano-Ronaldo-Manchester-United1.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9020380973815918,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\cbf22e3125d58839346a07a7df044754.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8976684212684631,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\com_media_.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.873134195804596,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\Cristiano+Ronaldo.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.6527068614959717,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\cristiano-ronaldo (1).jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8705077767372131,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\cristiano-ronaldo-163047908716x9.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.914362370967865,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\cristiano-ronaldo-2732x2732-9628.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.8407560586929321,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\cristiano-ronaldo-during-the-world-cup-match-between-portugal-v-uruguay-in-doha-qatar-on (1).jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9233492016792297,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\cristiano-ronaldo-during-the-world-cup-match-between-portugal-v-uruguay-in-doha-qatar-on.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9401829242706299,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\cristiano-ronaldo-face-21637197.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.8863170742988586,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\cristiano-ronaldo-face-pic-640x400.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.9016749858856201,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\cristiano-ronaldo-face-wallpaper-preview.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8415491580963135,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\Cristiano-Ronaldo-hits-cameraman-in-face-with-shot-during-Real-Madrid-practice.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8791468143463135,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\cristiano-ronaldo-real-madrid-2D5X5YD.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8977504372596741,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\cristiano-ronaldo-sports-face-wallpaper-preview.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8289914727210999,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\Cristiano-Ronaldo.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.817590057849884,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\cristianoronaldo1406.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8266059756278992,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\daqrzlg-38927a4c-3e60-479f-9408-9a3d7fd1abbc.jpg_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFw.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.6213707327842712,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\desktop-wallpaper-5-best-cristiano-ronaldo-latest-ronaldo-face-thumbnail.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9166048169136047,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\desktop-wallpaper-ronaldo-for-android-ronaldo-face-thumbnail.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.8599265813827515,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\GettyImages-1045270086.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_person",
+      "person_conf": 0.0,
+      "num_faces": 0,
+      "dropped": {}
+    },
+    {
+      "path": "ronaldo\\GettyImages-1237026192.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.883543074131012,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\gettyimages-971463110.jpg_crop=1xw_0.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8862850069999695,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\GOAL_-_Blank_WEB_-_Facebook_-_2023-06-22T143737.345.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.9189481139183044,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\Haircuts-Complimenting-Cristiano-Ronaldo_E2_80_99s-Face-Structure..jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8770046234130859,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\hAsxOYVLzHIteHwqWYGYJrO0WlC.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8951843976974487,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\HD-wallpaper-cristiano-ronaldo-portuguese-football-player-face-portrait-of-ronaldo-portugal-national-football-team-cr7-world-football-star-thumbnail.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8641303777694702,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\HD-wallpaper-ronaldo-face-expersion-experssion-face-ronaldo-football.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9133756160736084,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\image.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.903809666633606,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\io_8443_opencontent_objects_.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9233379364013672,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\manchester-england-cristiano-ronaldo-of-manchester-united-faces-the-media-during-a-press.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.7604028582572937,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\newFile-1.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8726482391357422,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\news_v3_images_bin_.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9269630908966064,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\nintchdbpict000250628953.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9303238391876221,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo-japan.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.8028489351272583,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_0.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9041029214859009,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_1.jpeg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.3609393239021301,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_10.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.9027326703071594,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_100.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.7183752655982971,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_101.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8098598718643188,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_102.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.6329436302185059,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 2,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_103.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.7901319861412048,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_104.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_visible_face",
+      "person_conf": 0.9295856356620789,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 1
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_105.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.8704331517219543,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 1,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_106.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9368986487388611,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_107.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8197696208953857,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_108.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9086453914642334,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_109.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9290093779563904,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_11.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8986579775810242,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_110.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8298402428627014,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_111.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.8837293386459351,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_112.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.895050048828125,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_113.png",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9034392833709717,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_114.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.8739025592803955,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_115.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.894121527671814,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_116.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.8863170742988586,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_117.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.6352777481079102,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_118.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.9145755767822266,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_119.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9248180389404297,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_12.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.8987804055213928,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_120.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9017805457115173,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_121.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.8952707052230835,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_122.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8098255395889282,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_123.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8413834571838379,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_124.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.8895318508148193,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_125.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.6685755848884583,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_126.webp",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.7961580753326416,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_127.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9170050621032715,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_128.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.941382646560669,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_129.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.8459885716438293,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_13.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.7677142024040222,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_130.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.8616893887519836,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_131.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8360474705696106,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_132.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.9343191385269165,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_133.jpeg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_person",
+      "person_conf": 0.0,
+      "num_faces": 0,
+      "dropped": {}
+    },
+    {
+      "path": "ronaldo\\ronaldo_134.jpeg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.707459032535553,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_135.jpeg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.35555434226989746,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_136.jpeg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.8720589280128479,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 1,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_137.jpeg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8565486073493958,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_138.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.7875136733055115,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_139.jpeg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_person",
+      "person_conf": 0.0,
+      "num_faces": 0,
+      "dropped": {}
+    },
+    {
+      "path": "ronaldo\\ronaldo_14.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.9144465923309326,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_140.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.7171828746795654,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_141.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8954301476478577,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_142.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9151468873023987,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_143.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8374435305595398,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 1,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_144.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9105949997901917,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_145.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.8491507172584534,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_146.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.9356159567832947,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 2,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_147.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.7242271304130554,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_148.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9273772835731506,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_149.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9398077130317688,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_15.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9142636060714722,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_150.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9095153212547302,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_151.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8621364831924438,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_152.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9047834277153015,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_153.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9326186180114746,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_154.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9236006140708923,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_155.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.9092867970466614,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_156.webp",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8522878289222717,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_157.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9496590495109558,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_158.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.8074793219566345,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_159.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9236615896224976,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_16.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.92234867811203,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_160.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.9070959091186523,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_161.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9177249670028687,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_162.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8656927943229675,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_163.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8977881073951721,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_164.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8252466320991516,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_165.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9482986330986023,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_166.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.8433995842933655,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_167.png",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.8996984958648682,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_168.webp",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_visible_face",
+      "person_conf": 0.9166704416275024,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 1,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_169.png",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9109452366828918,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_17.png",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9056209921836853,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_170.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.8841444849967957,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_171.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9328070878982544,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_172.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9197531938552856,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_173.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9322530627250671,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_174.webp",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.9484164714813232,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_175.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9060672521591187,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 1,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_176.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_person",
+      "person_conf": 0.0,
+      "num_faces": 0,
+      "dropped": {}
+    },
+    {
+      "path": "ronaldo\\ronaldo_177.webp",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.9266263842582703,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_178.webp",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.9272341132164001,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_179.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_visible_face",
+      "person_conf": 0.9112684726715088,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 1
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_18.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.8975517749786377,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_180.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8700714111328125,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_181.webp",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.9206538796424866,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 2,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_182.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.7824363708496094,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_183.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.8991056680679321,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_184.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8914099335670471,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_185.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.684256911277771,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 2,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_186.png",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9029534459114075,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_187.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.9173030257225037,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 2,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_188.png",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8926464915275574,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_189.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.9305360913276672,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_19.jpeg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8831257820129395,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_190.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9123273491859436,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_191.jpeg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9068992137908936,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_192.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.8437110185623169,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_193.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.8707885146141052,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_194.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9292014837265015,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_195.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9232363700866699,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_196.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9090012311935425,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_197.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8534215092658997,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_198.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.9096164107322693,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 2,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_199.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8870269656181335,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_2.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.9104073643684387,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_20.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8970702290534973,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_200.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9404439926147461,
+      "num_faces": 2,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_201.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.92807537317276,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_202.jpeg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9350835084915161,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_203.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9289214015007019,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_204.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9290744066238403,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_205.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.4531513750553131,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_206.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.6479958891868591,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_207.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.9286451935768127,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_208.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.9140421152114868,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_209.jpeg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9325487613677979,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_21.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.920452892780304,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_210.png",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8839277625083923,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_211.png",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.8458152413368225,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_212.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9174833297729492,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_213.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9477329254150391,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_214.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.9545624852180481,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_215.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9464784264564514,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_216.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.926006019115448,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_217.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9253114461898804,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_218.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.912923276424408,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_219.jpeg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.731550395488739,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_22.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9195699095726013,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_220.jpeg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_visible_face",
+      "person_conf": 0.8962615132331848,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 1,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_221.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9259786009788513,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_222.jpeg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9292917847633362,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_223.jpeg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.876437246799469,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 1,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_224.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.9432833790779114,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_225.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9307171106338501,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_226.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.8108645677566528,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 2,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_227.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8858771324157715,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 1,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_228.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.8669756054878235,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_229.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.9158197045326233,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 2,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_23.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.8465107083320618,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_230.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.8406047821044922,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 2,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_24.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8552742600440979,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_25.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8799616098403931,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_26.png",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9142791628837585,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_27.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8986223340034485,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_28.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8791468143463135,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_29.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_person",
+      "person_conf": 0.0,
+      "num_faces": 0,
+      "dropped": {}
+    },
+    {
+      "path": "ronaldo\\ronaldo_3.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.9313132166862488,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 1,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_30.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.9479978084564209,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_31.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9360106587409973,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_32.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9133756160736084,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_33.jpeg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.6215820908546448,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_34.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8678985834121704,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_35.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.9216578602790833,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_36.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9206112623214722,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_37.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.907861053943634,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_38.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8976684212684631,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_39.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.9173982739448547,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_4.jpeg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_visible_face",
+      "person_conf": 0.8608571887016296,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 1,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_40.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.864581823348999,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_41.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.8407560586929321,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_42.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9024375081062317,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_43.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.9046051502227783,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_44.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.773868978023529,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_45.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8672947883605957,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_46.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.9346997737884521,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_47.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9369648694992065,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_48.jpeg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9060652256011963,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_49.jpeg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.7837958335876465,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_5.jpeg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.9218341708183289,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_50.jpeg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.7957111597061157,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_51.jpeg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8747654557228088,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_52.jpeg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.7625240087509155,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_53.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8974189758300781,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_54.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8037777543067932,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_55.jpeg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9152017831802368,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_56.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.869091272354126,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_57.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_visible_face",
+      "person_conf": 0.8959713578224182,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 1
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_58.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9279226064682007,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_59.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8746924996376038,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_6.jpeg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_person",
+      "person_conf": 0.0,
+      "num_faces": 0,
+      "dropped": {}
+    },
+    {
+      "path": "ronaldo\\ronaldo_60.png",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.6379296779632568,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_61.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.9414284825325012,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_62.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.8028489351272583,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_63.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9373552799224854,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_64.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.9160875082015991,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_65.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.8373916149139404,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_66.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.8774130940437317,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_67.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.8843157887458801,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_68.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.6718215346336365,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_69.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8312441110610962,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_7.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.9251833558082581,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_70.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8459790349006653,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_71.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.5696359276771545,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_72.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.8925483226776123,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_73.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8920674324035645,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_74.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8323932886123657,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_76.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.5813639760017395,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_77.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.92226642370224,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_78.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8941292762756348,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_79.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9237866401672363,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_8.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.949718713760376,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_80.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8809216618537903,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_81.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.9337865710258484,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_82.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.9403042197227478,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_83.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9448237419128418,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_84.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9301801919937134,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_85.png",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.7861501574516296,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_86.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9298763275146484,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_87.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9212033748626709,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_88.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8171521425247192,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_89.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.860329806804657,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_9.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.9436903595924377,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_90.jpeg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.8373064398765564,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_91.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.8495703935623169,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_92.png",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.8266069293022156,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_93.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.9023240208625793,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_94.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9005631804466248,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_95.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.9027337431907654,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_96.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.6239575147628784,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_97.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_visible_face",
+      "person_conf": 0.8502630591392517,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 1
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_98.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.867687463760376,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\ronaldo_99.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_person",
+      "person_conf": 0.0,
+      "num_faces": 0,
+      "dropped": {}
+    },
+    {
+      "path": "ronaldo\\skysports-cristiano-ronaldo_5137594.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9373552799224854,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\wp8147590.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.9311403632164001,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0,
+        "low_quality": 0
+      }
+    },
+    {
+      "path": "ronaldo\\wp8147630.jpg",
+      "ok": false,
+      "error": null,
+      "skip_reason": "no_verified_face",
+      "person_conf": 0.9359005689620972,
+      "num_faces": 0,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 1,
+        "low_quality": 0
+      }
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "total": 1,
+  "processed": 1,
+  "saved_images": 1,
+  "saved_faces": 1,
+  "skipped": 0,
+  "errors": 0,
+  "skip_reasons": {},
+  "records": [
+    {
+      "path": "ronaldo\\1410474841f96af.jpg",
+      "ok": true,
+      "error": null,
+      "skip_reason": null,
+      "person_conf": 0.8248711228370667,
+      "num_faces": 1,
+      "dropped": {
+        "small_component": 0,
+        "not_visible": 0,
+        "feature_not_verified": 0
+      }
+    }
+  ]
+}
