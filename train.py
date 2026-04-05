@@ -44,8 +44,8 @@ from utils   import (
 # =============================================================================
 
 DEFAULT_CONFIG: Dict[str, Any] = {
-    "num_teams":         4,
-    "epochs":            200,
+    "num_teams":         2,
+    "epochs":            1000,
     "batch_size":        4,
     "lr":                2e-4,
     "lambda_cycle":      10.0,
@@ -59,10 +59,19 @@ DEFAULT_CONFIG: Dict[str, Any] = {
     "sample_dir":        "samples",
     "log_dir":           "logs",
     "data_root":         ".",
+    "domain_a_dir":      "outputs_faces_ronaldo_filtered/faces",
+    "domain_b_dir":      "bradpitt_circle_bounded",
     "num_workers":       4,
     "buffer_size":       50,
     "warmup_epochs":     5,
+    "grad_clip_norm":    1.0,
+    "early_stopping_patience": 30,
+    "early_stopping_min_delta": 1e-4,
+    "early_stopping_warmup_epochs": 50,
     "pretrained_enc":    True,
+    "amp":              False,
+    "amp_dtype":        "float16",
+    "non_finite_patience": 3,
 }
 
 
@@ -136,14 +145,21 @@ def train(config: Dict[str, Any], resume_path: str = None) -> None:
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(f"[train] Device: {device}")
 
-    # ── Domain folders ──
-    data_root      = config['data_root']
-    num_teams      = config['num_teams']
+    # ── Domain folders (Domain A/B explicitly mapped) ──
+    data_root = config['data_root']
+    domain_a_dir = config.get('domain_a_dir', 'outputs_faces_ronaldo_filtered/faces')
+    domain_b_dir = config.get('domain_b_dir', 'bradpitt_circle_bounded')
     domain_folders = [
-        os.path.join(data_root, f'train{chr(65 + i)}')
-        for i in range(num_teams)
+        os.path.normpath(os.path.join(data_root, domain_a_dir)),
+        os.path.normpath(os.path.join(data_root, domain_b_dir)),
     ]
-    print(f"[train] Domains: {domain_folders}")
+    num_teams = len(domain_folders)
+
+    if config.get('num_teams') != num_teams:
+        print(f"[train] Overriding num_teams={config.get('num_teams')} -> {num_teams} based on domain folders")
+
+    print(f"[train] Domain A: {domain_folders[0]}")
+    print(f"[train] Domain B: {domain_folders[1]}")
 
     for d in [config['checkpoint_dir'], config['sample_dir'], config['log_dir']]:
         os.makedirs(d, exist_ok=True)
@@ -184,11 +200,11 @@ def train(config: Dict[str, Any], resume_path: str = None) -> None:
     ce_loss   = nn.CrossEntropyLoss()
 
     # ── Optimisers ──
-    # Generator: two parameter groups — encoder at lower lr, rest at full lr
+    # Generator: pretrained encoder backbone at lower lr, new layers at full lr
     lr = config['lr']
     g_param_groups = [
-        {'params': G.encoder.parameters(),         'lr': lr * 0.1},
-        {'params': G.proj.parameters(),            'lr': lr},
+        {'params': G.encoder.features.parameters(), 'lr': lr * 0.1},
+        {'params': G.encoder.proj.parameters(),     'lr': lr},
         {'params': G.label_embedding.parameters(), 'lr': lr},
         {'params': G.res_blocks.parameters(),      'lr': lr},
         {'params': G.up1.parameters(),             'lr': lr},
@@ -200,10 +216,25 @@ def train(config: Dict[str, Any], resume_path: str = None) -> None:
     opt_D_B = Adam(D_B.parameters(), lr=lr, betas=(0.5, 0.999))
     opt_C   = Adam(C.parameters(),   lr=lr, betas=(0.5, 0.999))
 
-    # ── Mixed-precision GradScalers ──
-    scaler_G = torch.amp.GradScaler('cuda')
-    scaler_D = torch.amp.GradScaler('cuda')
-    scaler_C = torch.amp.GradScaler('cuda')
+    # ── Mixed-precision GradScalers (enabled only when configured) ──
+    use_amp = bool(config.get('amp', False)) and device.type == 'cuda'
+    amp_dtype_name = str(config.get('amp_dtype', 'float16')).lower()
+    amp_dtype = torch.bfloat16 if amp_dtype_name == 'bfloat16' else torch.float16
+    amp_device = 'cuda' if use_amp else 'cpu'
+    scaler_G = torch.amp.GradScaler(amp_device, enabled=use_amp)
+    scaler_D = torch.amp.GradScaler(amp_device, enabled=use_amp)
+    scaler_C = torch.amp.GradScaler(amp_device, enabled=use_amp)
+    print(f"[train] AMP enabled: {use_amp} (dtype={amp_dtype})")
+
+    # ── Stability + early stopping controls ──
+    grad_clip_norm = float(config.get('grad_clip_norm', 0.0))
+    es_patience = int(config.get('early_stopping_patience', 0))
+    es_min_delta = float(config.get('early_stopping_min_delta', 0.0))
+    es_warmup_epochs = int(config.get('early_stopping_warmup_epochs', 0))
+    non_finite_patience = int(config.get('non_finite_patience', 3))
+    best_epoch_g = float('inf')
+    epochs_without_improvement = 0
+    non_finite_streak = 0
 
     # ── LR Schedulers ──
     total_epochs  = config['epochs']
@@ -240,9 +271,14 @@ def train(config: Dict[str, Any], resume_path: str = None) -> None:
 
     print(f"[train] Starting from epoch {start_epoch}/{total_epochs}")
 
+    def _all_finite(*tensors: torch.Tensor) -> bool:
+        return all(torch.isfinite(t).all().item() for t in tensors)
+
     # ── Training loop ──
     for epoch in range(start_epoch, total_epochs + 1):
         G.train(); D_A.train(); D_B.train(); C.train()
+        epoch_g_sum = 0.0
+        epoch_g_count = 0
 
         for iteration, (real_img, src_label) in enumerate(loader, start=1):
             real_img  = real_img.to(device)
@@ -268,7 +304,7 @@ def train(config: Dict[str, Any], resume_path: str = None) -> None:
             for p in C.parameters():
                 p.requires_grad_(False)
 
-            with torch.autocast('cuda', dtype=torch.float16):
+            with torch.autocast(device_type=device.type, dtype=amp_dtype, enabled=use_amp):
                 fake_B = G(real_img, tgt_label)    # source → target
                 rec_A  = G(fake_B,   src_label)    # target → source (cycle)
                 idt_A  = G(real_img, src_label)    # source → source (identity)
@@ -283,14 +319,35 @@ def train(config: Dict[str, Any], resume_path: str = None) -> None:
                 l_cls = cls_loss(C(fake_B), tgt_label)
 
             # Perceptual loss runs in float32 for numerical stability
-            with torch.autocast('cuda', enabled=False):
+            with torch.autocast(device_type=device.type, enabled=False):
                 l_perc = perc_loss(fake_B.float(), real_tgt.float())
 
             loss_G = l_gan + l_cyc + l_idt + l_cls + l_perc
 
+            if not _all_finite(loss_G, l_gan, l_cyc, l_idt, l_cls, l_perc, fake_B, rec_A, idt_A):
+                non_finite_streak += 1
+                print(
+                    f"[non-finite] G step skipped at epoch {epoch} iter {iteration} "
+                    f"(streak={non_finite_streak}/{non_finite_patience})"
+                )
+                opt_G.zero_grad(set_to_none=True)
+                for p in C.parameters():
+                    p.requires_grad_(True)
+                if non_finite_streak >= non_finite_patience:
+                    print("[non-finite] Stopping training to prevent checkpoint corruption.")
+                    return
+                continue
+            non_finite_streak = 0
+
             scaler_G.scale(loss_G).backward()
+            if grad_clip_norm > 0:
+                scaler_G.unscale_(opt_G)
+                nn.utils.clip_grad_norm_(G.parameters(), grad_clip_norm)
             scaler_G.step(opt_G)
             scaler_G.update()
+            if torch.isfinite(loss_G):
+                epoch_g_sum += float(loss_G.item())
+                epoch_g_count += 1
 
             for p in C.parameters():
                 p.requires_grad_(True)
@@ -299,9 +356,16 @@ def train(config: Dict[str, Any], resume_path: str = None) -> None:
             # Step 2 — Update Classifier C on real images
             # =================================================================
             opt_C.zero_grad(set_to_none=True)
-            with torch.autocast('cuda', dtype=torch.float16):
+            with torch.autocast(device_type=device.type, dtype=amp_dtype, enabled=use_amp):
                 loss_C = ce_loss(C(real_img), src_label)
+            if not _all_finite(loss_C):
+                print(f"[non-finite] C step skipped at epoch {epoch} iter {iteration}")
+                opt_C.zero_grad(set_to_none=True)
+                continue
             scaler_C.scale(loss_C).backward()
+            if grad_clip_norm > 0:
+                scaler_C.unscale_(opt_C)
+                nn.utils.clip_grad_norm_(C.parameters(), grad_clip_norm)
             scaler_C.step(opt_C)
             scaler_C.update()
 
@@ -311,12 +375,19 @@ def train(config: Dict[str, Any], resume_path: str = None) -> None:
             # =================================================================
             opt_D_A.zero_grad(set_to_none=True)
             rec_A_buf = buf_A.push_and_pop(rec_A.detach())
-            with torch.autocast('cuda', dtype=torch.float16):
+            with torch.autocast(device_type=device.type, dtype=amp_dtype, enabled=use_amp):
                 loss_D_A = gan_loss.discriminator_loss(
                     D_A(real_img,  src_label),
                     D_A(rec_A_buf, src_label),
                 )
+            if not _all_finite(loss_D_A):
+                print(f"[non-finite] D_A step skipped at epoch {epoch} iter {iteration}")
+                opt_D_A.zero_grad(set_to_none=True)
+                continue
             scaler_D.scale(loss_D_A).backward()
+            if grad_clip_norm > 0:
+                scaler_D.unscale_(opt_D_A)
+                nn.utils.clip_grad_norm_(D_A.parameters(), grad_clip_norm)
             scaler_D.step(opt_D_A)
             scaler_D.update()
 
@@ -326,12 +397,19 @@ def train(config: Dict[str, Any], resume_path: str = None) -> None:
             # =================================================================
             opt_D_B.zero_grad(set_to_none=True)
             fake_B_buf = buf_B.push_and_pop(fake_B.detach())
-            with torch.autocast('cuda', dtype=torch.float16):
+            with torch.autocast(device_type=device.type, dtype=amp_dtype, enabled=use_amp):
                 loss_D_B = gan_loss.discriminator_loss(
                     D_B(real_tgt,   tgt_label),
                     D_B(fake_B_buf, tgt_label),
                 )
+            if not _all_finite(loss_D_B):
+                print(f"[non-finite] D_B step skipped at epoch {epoch} iter {iteration}")
+                opt_D_B.zero_grad(set_to_none=True)
+                continue
             scaler_D.scale(loss_D_B).backward()
+            if grad_clip_norm > 0:
+                scaler_D.unscale_(opt_D_B)
+                nn.utils.clip_grad_norm_(D_B.parameters(), grad_clip_norm)
             scaler_D.step(opt_D_B)
             scaler_D.update()
 
@@ -363,6 +441,29 @@ def train(config: Dict[str, Any], resume_path: str = None) -> None:
         # ── LR step ──
         sched_G.step(); sched_D_A.step(); sched_D_B.step(); sched_C.step()
 
+        # ── Early stopping on epoch-mean generator loss ──
+        if epoch_g_count == 0:
+            print(f"[non-finite] No valid generator steps in epoch {epoch}; stopping training.")
+            break
+
+        if es_patience > 0 and epoch_g_count > 0:
+            epoch_mean_g = epoch_g_sum / epoch_g_count
+            if epoch < es_warmup_epochs:
+                print(f"[early-stop] Warmup active ({epoch}/{es_warmup_epochs}), mean_G={epoch_mean_g:.4f}")
+            elif epoch_mean_g < (best_epoch_g - es_min_delta):
+                best_epoch_g = epoch_mean_g
+                epochs_without_improvement = 0
+                print(f"[early-stop] New best mean_G={best_epoch_g:.4f} at epoch {epoch}")
+            else:
+                epochs_without_improvement += 1
+                print(
+                    f"[early-stop] No improvement for {epochs_without_improvement}/{es_patience} "
+                    f"epochs (best={best_epoch_g:.4f}, current={epoch_mean_g:.4f})"
+                )
+                if epochs_without_improvement >= es_patience:
+                    print(f"[early-stop] Triggered at epoch {epoch}")
+                    break
+
         # ── Periodic checkpoint + sample grid ──
         if epoch % 10 == 0:
             ckpt_path = os.path.join(config['checkpoint_dir'], f'epoch_{epoch:03d}.pt')
@@ -377,7 +478,7 @@ def train(config: Dict[str, Any], resume_path: str = None) -> None:
 
             G.eval()
             with torch.no_grad():
-                with torch.autocast('cuda', dtype=torch.float16):
+                with torch.autocast(device_type=device.type, dtype=amp_dtype, enabled=use_amp):
                     vis_fake = G(real_img[:4], tgt_label[:4])
                     vis_rec  = G(vis_fake,     src_label[:4])
 

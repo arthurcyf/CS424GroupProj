@@ -2,7 +2,7 @@
 import ast, sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-files = ['models.py', 'dataset.py', 'losses.py', 'utils.py', 'train.py', 'infer.py', 'verify.py']
+files = ['models.py', 'dataset.py', 'losses.py', 'utils.py', 'train.py', 'infer.py', 'evaluate.py', 'verify.py']
 all_ok = True
 for f in files:
     try:

@@ -4,14 +4,12 @@
 #
 # ── IMPORTANT: PyTorch installation ─────────────────────────────────────────
 #
-# PyTorch must be installed with the correct CUDA version for your GPU.
-# Do NOT use the plain `pip install torch` here — it installs the CPU-only build.
+# PyTorch must be installed with a CUDA build compatible with your NVIDIA driver.
+# This project pins torch below 2.11 to avoid the CUDA 13.0 build that caused
+# runtime fallback to CPU on CUDA 12.8 drivers.
 #
-# For CUDA 12.1 (most RTX 30xx / 40xx cards):
-#   python -m pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
-#
-# For CUDA 11.8:
-#   python -m pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
+# For CUDA 12.8 systems, install with:
+#   python -m pip install -r requirements.txt
 #
 # If you are using the ComfyUI embedded Python environment, PyTorch and
 # torchvision are already installed — skip the line above and run:
@@ -22,12 +20,13 @@
 #
 # =============================================================================
 
+# Prefer CUDA 12.8 wheels when available.
+--extra-index-url https://download.pytorch.org/whl/cu128
+
 # ── Core deep learning ───────────────────────────────────────────────────────
-# torch and torchvision are listed here so a fresh-env install works.
-# The ComfyUI embedded env already provides these — pip will skip them
-# if the correct versions are already present.
-torch>=2.0.0
-torchvision>=0.15.0
+# Keep torch below 2.11 to avoid cu130 wheel incompatibility on 12.8 drivers.
+torch>=2.10.0,<2.11.0
+torchvision>=0.25.0,<0.26.0
 
 # ── Image I/O ────────────────────────────────────────────────────────────────
 Pillow>=9.0.0                  # PIL — image loading in JerseyDataset and infer.py

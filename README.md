@@ -1,6 +1,31 @@
 # CS424GroupProj
 Group Project for CS424
 
+## Checkpoint Evaluation Metrics
+
+Use `evaluate.py` to score a trained checkpoint with CycleGAN-friendly metrics:
+
+- Cycle consistency: `A->B->A` and `B->A->B` using `L1`, `PSNR`, `SSIM`
+- Identity preservation: `A->A` and `B->B` using `L1`, `PSNR`, `SSIM`
+- Optional translation-domain classifier accuracy (if `C_state` exists in checkpoint)
+
+Run:
+
+```bash
+python evaluate.py --checkpoint checkpoints/epoch_040.pt --max_images 200
+```
+
+Optional JSON output:
+
+```bash
+python evaluate.py --checkpoint checkpoints/epoch_040.pt --max_images 200 --output_json logs/eval_epoch_040.json
+```
+
+Interpretation guide:
+
+- Lower is better: `L1`
+- Higher is better: `PSNR`, `SSIM`, classifier translation accuracy
+
 ## Annotation-Free Segmentation Pipeline
 
 The notebook `segmentation_pipeline.ipynb` implements face + jersey segmentation **without using** `dataset/_annotations.coco.json`.

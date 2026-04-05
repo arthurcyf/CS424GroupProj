@@ -5,10 +5,13 @@
 # ── Training outputs (large / generated files) ───────────────────────────────
 checkpoints/
 checkpoints_vanilla/
+checkpoints_*/
 samples/
 samples_vanilla/
+samples_*/
 logs/
 logs_vanilla/
+logs_*/
 results/
 outputs/
 outputs_tuned/
@@ -17,12 +20,23 @@ outputs_faces/
 outputs_faces_strict/
 outputs_faces_strict_all/
 
+# Evaluation artifacts
+eval/
+metrics/
+reports/
+
 # ── Dataset images (not committed — share separately) ────────────────────────
 trainA/
 trainB/
 trainC/
 trainD/
 test_samples/
+dataset_cache/
+
+# Local/raw data folders
+bradpitt_circle_bounded/
+outputs_faces_ronaldo_filtered/
+ronaldo/
 
 # ── Python ───────────────────────────────────────────────────────────────────
 __pycache__/
@@ -34,6 +48,18 @@ __pycache__/
 dist/
 build/
 .eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.nox/
+.tox/
+.coverage
+.coverage.*
+htmlcov/
+
+# PyTorch / CUDA local caches
+.cache/
+.torch/
 
 # ── Jupyter ───────────────────────────────────────────────────────────────────
 .ipynb_checkpoints/
@@ -43,8 +69,20 @@ build/
 .venv/
 venv/
 env/
+.env.*
+*.local
+
+# ── IDE / Editor ─────────────────────────────────────────────────────────────
+.vscode/
+.idea/
 
 # ── OS ───────────────────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# ── Misc temporary files ─────────────────────────────────────────────────────
+*.tmp
+*.temp
+*.bak
+*.log
