@@ -97,7 +97,8 @@ class CycleLoss(nn.Module):
             loss : scalar, weighted by lambda_cycle
         """
         valid_mask = compute_valid_mask(real)
-        return self.lambda_cycle * torch.mean(valid_mask * torch.abs(rec - real))
+        diff = valid_mask * torch.abs(rec - real)
+        return self.lambda_cycle * diff.sum() / (valid_mask.sum().clamp(min=1) * 3)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -129,7 +130,8 @@ class IdentityLoss(nn.Module):
             loss : scalar, weighted by lambda_identity
         """
         valid_mask = compute_valid_mask(real)
-        return self.lambda_identity * torch.mean(valid_mask * torch.abs(idt - real))
+        diff = valid_mask * torch.abs(idt - real)
+        return self.lambda_identity * diff.sum() / (valid_mask.sum().clamp(min=1) * 3)
 
 
 # ─────────────────────────────────────────────────────────────────────────────

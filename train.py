@@ -157,7 +157,7 @@ def train(args: argparse.Namespace) -> None:
     opt_DB = torch.optim.Adam(D_B.parameters(), lr=args.lr, betas=(0.5, 0.999))
 
     # ── LR Schedulers ────────────────────────────────────────────────────────
-    lr_fn    = make_lr_lambda(args.epochs, warmup_epochs=5, decay_start=100)
+    lr_fn    = make_lr_lambda(args.epochs, warmup_epochs=5, decay_start=args.epochs // 2)
     sched_G  = torch.optim.lr_scheduler.LambdaLR(opt_G,  lr_lambda=lr_fn)
     sched_DA = torch.optim.lr_scheduler.LambdaLR(opt_DA, lr_lambda=lr_fn)
     sched_DB = torch.optim.lr_scheduler.LambdaLR(opt_DB, lr_lambda=lr_fn)
@@ -261,17 +261,23 @@ def train(args: argparse.Namespace) -> None:
 
             loss_G = l_gan + l_cyc + l_idt + l_id
             scaler.scale(loss_G).backward()
+            scaler.unscale_(opt_G)
+            torch.nn.utils.clip_grad_norm_(
+                list(G_AB.parameters()) + list(G_BA.parameters()), max_norm=1.0
+            )
             scaler.step(opt_G)
 
             # ══════════════════════════════════════════════════════════════
             # Discriminator D_B Update
             # ══════════════════════════════════════════════════════════════
             opt_DB.zero_grad(set_to_none=True)
-            fake_B_buf = buf_B.push_and_pop(fake_B.detach()).to(device)
+            fake_B_buf, mask_fB_buf = buf_B.push_and_pop(fake_B.detach(), mask_fB.detach())
+            fake_B_buf  = fake_B_buf.to(device)
+            mask_fB_buf = mask_fB_buf.to(device)
             with torch.autocast(device_type=device.type, dtype=amp_dtype, enabled=use_amp):
                 l_DB = gan_loss.discriminator_loss(
-                    D_B(real_B,       mask_B,  id_B),
-                    D_B(fake_B_buf,   mask_fB, id_B),
+                    D_B(real_B,      mask_B,      id_B),
+                    D_B(fake_B_buf,  mask_fB_buf, id_B),
                 )
             scaler.scale(l_DB).backward()
             scaler.step(opt_DB)
@@ -280,11 +286,13 @@ def train(args: argparse.Namespace) -> None:
             # Discriminator D_A Update
             # ══════════════════════════════════════════════════════════════
             opt_DA.zero_grad(set_to_none=True)
-            fake_A_buf = buf_A.push_and_pop(fake_A.detach()).to(device)
+            fake_A_buf, mask_fA_buf = buf_A.push_and_pop(fake_A.detach(), mask_fA.detach())
+            fake_A_buf  = fake_A_buf.to(device)
+            mask_fA_buf = mask_fA_buf.to(device)
             with torch.autocast(device_type=device.type, dtype=amp_dtype, enabled=use_amp):
                 l_DA = gan_loss.discriminator_loss(
-                    D_A(real_A,       mask_A,  id_A),
-                    D_A(fake_A_buf,   mask_fA, id_A),
+                    D_A(real_A,      mask_A,      id_A),
+                    D_A(fake_A_buf,  mask_fA_buf, id_A),
                 )
             scaler.scale(l_DA).backward()
             scaler.step(opt_DA)

@@ -119,9 +119,8 @@ class ImageBuffer:
     """
     Discriminator replay buffer for training stabilisation (Shrivastava et al., 2017).
 
-    Stores up to `max_size` previously generated images.  For each image in an
-    incoming batch, with probability 0.5 a randomly selected stored image is
-    returned (and replaced with the new one); otherwise the new image is returned.
+    Stores up to `max_size` previously generated (image, mask) pairs so that
+    the discriminator always receives a mask that matches the image it sees.
 
     Args:
         max_size : maximum buffer capacity (default 50)
@@ -129,28 +128,34 @@ class ImageBuffer:
 
     def __init__(self, max_size: int = 50):
         self.max_size = max_size
-        self.buffer: List[Tensor] = []
+        self.buffer: List[tuple] = []  # list of (image, mask) tuples
 
-    def push_and_pop(self, images: Tensor) -> Tensor:
+    def push_and_pop(self, images: Tensor, masks: Tensor) -> tuple:
         """
         Args:
-            images : (B, C, H, W)  batch of generated images
+            images : (B, 3,  H, W)  batch of generated images
+            masks  : (B, 11, H, W)  corresponding parsing masks
         Returns:
-            out    : (B, C, H, W)  mixed batch (buffered + current)
+            out_images : (B, 3,  H, W)  mixed batch (buffered + current)
+            out_masks  : (B, 11, H, W)  matching masks for each returned image
         """
-        result: List[Tensor] = []
-        for img in images.detach():               # iterate over (C, H, W) slices
+        result_imgs: List[Tensor] = []
+        result_msks: List[Tensor] = []
+        for img, msk in zip(images.detach(), masks.detach()):
             if len(self.buffer) < self.max_size:
-                self.buffer.append(img.clone())
-                result.append(img)
+                self.buffer.append((img.clone(), msk.clone()))
+                result_imgs.append(img)
+                result_msks.append(msk)
             elif random.random() < 0.5:
                 idx = random.randrange(len(self.buffer))
-                old = self.buffer[idx].clone()
-                self.buffer[idx] = img.clone()
-                result.append(old)
+                old_img, old_msk = self.buffer[idx]
+                self.buffer[idx] = (img.clone(), msk.clone())
+                result_imgs.append(old_img)
+                result_msks.append(old_msk)
             else:
-                result.append(img)
-        return torch.stack(result, dim=0)
+                result_imgs.append(img)
+                result_msks.append(msk)
+        return torch.stack(result_imgs, dim=0), torch.stack(result_msks, dim=0)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
